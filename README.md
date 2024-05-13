@@ -4,6 +4,7 @@
 
 - [Installation](#installation)
 - [Usage](#usage)
+- [Documentation](#documentation)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -65,6 +66,13 @@
     ```
 
 2. Open your web browser and visit `http://localhost:8000` to access the application.
+
+## Documentation
+1. For API Documentation you can import this postman collection
+
+    ```
+    https://api.postman.com/collections/629881-b87e2db7-b4dd-4cab-8a5b-73c980901db0?access_key=PMAT-01HXS10MM8T0CT875ZG1G3534Z
+    ```
 
 ## Contributing
 
