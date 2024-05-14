@@ -30,8 +30,8 @@ class UserController extends ApiController
         $size = $request->input('size', 10);
         $offset = ($page - 1) * $size;
 
-        $users = User::where('user_role_id', '!=', '1')->with('userRole')
-            ->select('id', 'fullname', 'created_at', 'updated_at', 'user_role_id', 'last_active_at')
+        $users = User::where('user_role_id', '!=', '1')->with('userRole:id,code,name')
+            ->select('id', 'name', 'created_at', 'updated_at', 'user_role_id', 'last_active_at')
             ->offset($offset)
             ->limit($size)
             ->get();
@@ -59,7 +59,7 @@ class UserController extends ApiController
             $user = new User();
             $user->id = $id;
             $user->nik = $request->nik;
-            $user->fullname = $request->fullname;
+            $user->name = $request->name;
             $user->user_role_id = $request->user_role_id;
             $user->phone_number = $request->phone_number;
             $user->email = $request->email;
@@ -79,12 +79,12 @@ class UserController extends ApiController
     public function show($id)
     {
         if ($id === 'me' || $id == auth()->user()->id) {
-            return $this->sendResponse(auth()->user()->with('userRole')->first());
+            return $this->sendResponse(auth()->user()->load(['userRole:id,code,name', 'createdBy:id,name', 'updatedBy:id,name']));
         }
         if (auth()->user()->user_role_id !== 1) {
             return $this->sendError('Unauthorized', [], 401);
         }
-        $user = User::where('id', $id)->with('userRole')->first();
+        $user = User::where('id', $id)->with(['userRole:id,code,name', 'createdBy:id,name', 'updatedBy:id,name'])->first();
         if (!$user) {
             return $this->sendError('User not found.', [], 404);
         }
@@ -120,7 +120,7 @@ class UserController extends ApiController
         }
         DB::beginTransaction();
         try {
-            $user->fullname = $request->fullname;
+            $user->name = $request->name;
             $user->phone_number = $request->phone_number;
             $user->email = $request->email;
             $user->save();

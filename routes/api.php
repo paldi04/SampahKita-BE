@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TempatTimbulanSampahController;
 use App\Http\Controllers\UserController;
 
 
@@ -19,4 +20,9 @@ Route::prefix('user')->group(function () {
     Route::post('/profile', [UserController::class, 'store']);
     Route::put('/profile/{id}', [UserController::class, 'update']);
     Route::delete('/profile/{id}', [UserController::class, 'destroy']);
+});
+Route::prefix('tempat-timbulan-sampah')->group(function () {
+    Route::get('/kategori/list', [TempatTimbulanSampahController::class, 'listTempatTimbulanSampahKategori']);
+    Route::get('/sektor/list', [TempatTimbulanSampahController::class, 'listTempatTimbulanSampahSektor']);
+    Route::get('/list', [TempatTimbulanSampahController::class, 'list']);
 });

@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\TempatTimbulanSampah;
 
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateUserRequest extends FormRequest
+class ListTempatTimbulanSampahRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,17 +19,22 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'phone_number' => 'required|string|regex:/^[0-9]{7,15}$/|starts_with:08',
-            'email' => 'required|email',
+            'tts_kategori_id' => 'exists:tempat_timbulan_sampah_kategoris,id',
+            'tts_Sektor_id' => 'exists:tempat_timbulan_sampah_kategoris,id',
+            'nama_tempat' => 'string',
+            'alamat_tempat' => 'string',
+            'status' => 'string',
+            'page' => 'numeric|min:1',
+            'size' => 'numeric|min:1|max:100',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'phone_number.regex' => 'Format nomor telepon tidak valid!',
-            'phone_number.starts_with' => 'Nomor telepon harus diawali dengan 08!',
+            'page.min' => 'Minimum halaman adalah 1!',
+            'size.min' => 'Minimum ukuran adalah 1!',
+            'size.max' => 'Maksimum ukuran adalah 100!',
         ];
     }
 

@@ -28,7 +28,7 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'nik' => 'required|numeric|unique:users',
-            'fullname' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'user_role_id' => [
                 'required',
                 'numeric',

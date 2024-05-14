@@ -13,7 +13,7 @@ class UserRole extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'role_name',
+        'name',
     ];
 
     /**
