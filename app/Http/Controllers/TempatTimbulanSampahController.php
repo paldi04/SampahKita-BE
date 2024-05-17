@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TempatTimbulanSampah\ListTempatTimbulanSampahKategoriRequest;
-use App\Http\Requests\TempatTimbulanSampah\ListTempatTimbulanSampahRequest;
-use App\Http\Requests\TempatTimbulanSampah\ListTempatTimbulanSampahSektorRequest;
+use App\Http\Requests\TempatTimbulanSampah\GetTempatTimbulanSampahKategoriListRequest;
+use App\Http\Requests\TempatTimbulanSampah\GetTempatTimbulanSampahSektorListRequest;
+use App\Http\Requests\TempatTimbulanSampah\GetTempatTimbulanSampahListRequest;
 use App\Models\TempatTimbulanSampah;
 use App\Http\Requests\TempatTimbulanSampah\StoreTempatTimbulanSampahRequest;
 use App\Http\Requests\TempatTimbulanSampah\UpdateTempatTimbulanSampahRequest;
@@ -15,17 +15,16 @@ class TempatTimbulanSampahController extends ApiController
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        $this->middleware('auth:api')->except(['getTempatTimbulanSampahKategoriList', 'getTempatTimbulanSampahSektorList']);
     }
 
-    public function listTempatTimbulanSampahKategori(ListTempatTimbulanSampahKategoriRequest $request)
+    public function getTempatTimbulanSampahKategoriList(GetTempatTimbulanSampahKategoriListRequest $request)
     {
         $page = $request->input('page', 1);
         $size = $request->input('size', 10);
         $offset = ($page - 1) * $size;
 
-        $users = TempatTimbulanSampahKategori::select('id', 'code', 'name')
-            ->offset($offset)->limit($size)->get();
+        $users = TempatTimbulanSampahKategori::select('id', 'name')->offset($offset)->limit($size)->get();
 
         $total = TempatTimbulanSampahKategori::count();
 
@@ -39,7 +38,7 @@ class TempatTimbulanSampahController extends ApiController
         return $this->sendResponse($result);
     }
 
-    public function listTempatTimbulanSampahSektor(ListTempatTimbulanSampahSektorRequest $request)
+    public function getTempatTimbulanSampahSektorList(GetTempatTimbulanSampahSektorListRequest $request)
     {
         $page = $request->input('page', 1);
         $size = $request->input('size', 10);
@@ -61,7 +60,7 @@ class TempatTimbulanSampahController extends ApiController
         return $this->sendResponse($result);
     }
 
-    public function list(ListTempatTimbulanSampahRequest $request)
+    public function getTempatTimbulanSampahList(GetTempatTimbulanSampahListRequest $request)
     {
         $page = $request->input('page', 1);
         $size = $request->input('size', 10);

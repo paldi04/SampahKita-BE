@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->uuid('tts_id')->nullable()->comment('ID Tempat Timbulan Sampah');
-            $table->foreign('tts_id')->references('id')->on('tempat_timbulan_sampahs')->onDelete('restrict');
+            $table->uuid('tts_id')->nullable()->comment('ID Tempat Timbulan Sampah')->after('status');
+            $table->foreign('tts_id')->references('id')->on('tempat_timbulan_sampahs')->onDelete('set null')->onUpdate('cascade');
         });
     }
 

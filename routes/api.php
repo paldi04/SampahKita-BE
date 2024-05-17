@@ -7,22 +7,27 @@ use App\Http\Controllers\UserController;
 
 
 Route::prefix('auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register/{user_role_id}/{tts_kategori_id}', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/status', [AuthController::class, 'status']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::put('/change-password/{id}', [AuthController::class, 'changePassword']);
+    Route::put('/change-password', [AuthController::class, 'changePassword']);
 });
 Route::prefix('user')->group(function () {
-    Route::get('/profile/list', [UserController::class, 'list']);
-    Route::get('/profile/{id}', [UserController::class, 'show']);
-    Route::post('/profile', [UserController::class, 'store']);
-    Route::put('/profile/{id}', [UserController::class, 'update']);
-    Route::delete('/profile/{id}', [UserController::class, 'destroy']);
+    Route::prefix('role')->group(function () {
+        Route::get('/list', [UserController::class, 'getUserRoleList']);
+    });
+    Route::prefix('profile')->group(function () {
+        Route::post('/', [UserController::class, 'createUser']);
+        Route::get('/list', [UserController::class, 'getUserList']);
+        Route::get('/{id}', [UserController::class, 'GetUserDetail']);
+        Route::put('/{id}', [UserController::class, 'update']);
+        Route::delete('/{id}', [UserController::class, 'destroy']);
+    });
 });
 Route::prefix('tempat-timbulan-sampah')->group(function () {
-    Route::get('/kategori/list', [TempatTimbulanSampahController::class, 'listTempatTimbulanSampahKategori']);
-    Route::get('/sektor/list', [TempatTimbulanSampahController::class, 'listTempatTimbulanSampahSektor']);
-    Route::get('/list', [TempatTimbulanSampahController::class, 'list']);
+    Route::get('/kategori/list', [TempatTimbulanSampahController::class, 'getTempatTimbulanSampahKategoriList']);
+    Route::get('/sektor/list', [TempatTimbulanSampahController::class, 'getTempatTimbulanSampahSektorList']);
+    Route::get('/list', [TempatTimbulanSampahController::class, 'getTempatTimbulanSampahList']);
 });

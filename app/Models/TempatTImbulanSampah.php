@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TempatTimbulanSampah extends Model
 {
+    public $incrementing = false;
 
     protected $fillable = [
         'nama_tempat',
@@ -25,6 +26,10 @@ class TempatTimbulanSampah extends Model
         'status',
         'created_by',
         'updated_by',
+    ];
+
+    protected $casts = [
+        'foto_tempat' => 'array',
     ];
 
     public function tempatTimbulanSampahKategori()
@@ -50,11 +55,6 @@ class TempatTimbulanSampah extends Model
     protected static function boot()
     {
         parent::boot();
-
-        static::creating(function ($model) {
-            $model->created_by = auth()->id();
-            $model->updated_by = auth()->id();
-        });
 
         static::updating(function ($model) {
             $model->updated_by = auth()->id();

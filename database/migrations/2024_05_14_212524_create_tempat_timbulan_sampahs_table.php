@@ -12,25 +12,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tempat_timbulan_sampah_kategoris', function (Blueprint $table) {
-            $table->id();
-            $table->string('code')->unique();
+            $table->string('id')->primary();
             $table->string('name');
             $table->timestamps();
         });
         Schema::create('tempat_timbulan_sampah_sektors', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tts_kategori_id')->comment('ID Kategori Tempat Timbulan Sampah');
-            $table->foreign('tts_kategori_id')->references('id')->on('tempat_timbulan_sampah_kategoris')->onDelete('restrict');
+            $table->string('tts_kategori_id')->comment('ID Kategori Tempat Timbulan Sampah');
+            $table->foreign('tts_kategori_id')->references('id')->on('tempat_timbulan_sampah_kategoris')->onDelete('restrict')->onUpdate('cascade');
             $table->string('name');
             $table->timestamps();
         });
         Schema::create('tempat_timbulan_sampahs', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nama_tempat');
-            $table->unsignedBigInteger('tts_kategori_id')->comment('ID Kategori Tempat Timbulan Sampah');
-            $table->foreign('tts_kategori_id')->references('id')->on('tempat_timbulan_sampah_kategoris')->onDelete('restrict');
+            $table->string('tts_kategori_id')->comment('ID Kategori Tempat Timbulan Sampah');
+            $table->foreign('tts_kategori_id')->references('id')->on('tempat_timbulan_sampah_kategoris')->onDelete('restrict')->onUpdate('cascade');
             $table->unsignedBigInteger('tts_sektor_id')->nullable()->comment('ID Sektor Tempat Timbulan Sampah');
-            $table->foreign('tts_sektor_id')->references('id')->on('tempat_timbulan_sampah_sektors')->onDelete('restrict');
+            $table->foreign('tts_sektor_id')->references('id')->on('tempat_timbulan_sampah_sektors')->onDelete('restrict')->onUpdate('cascade');
             $table->string('alamat_tempat');
             $table->string('afiliasi')->nullable();
             $table->string('latitude');
@@ -42,11 +41,11 @@ return new class extends Migration
             $table->decimal('sisa_lahan', 10, 2);
             $table->string('kepemilikan_lahan');
             $table->string('foto_tempat')->nullable();
-            $table->string('status');
+            $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->uuid('created_by');
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict')->onUpdate('cascade');
             $table->uuid('updated_by');
-            $table->foreign('updated_by')->references('id')->on('users')->onDelete('restrict');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('restrict')->onUpdate('cascade');
             $table->timestamps();
         });
     }

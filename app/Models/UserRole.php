@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserRole extends Model
 {
-
+    public $incrementing = false;
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -14,6 +15,10 @@ class UserRole extends Model
      */
     protected $fillable = [
         'name',
+    ];
+
+    protected $cast = [
+        'id' => 'string',
     ];
 
     /**

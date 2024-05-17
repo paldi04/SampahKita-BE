@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ListTempatTimbulanSampahRequest extends FormRequest
+class GetTempatTimbulanSampahSektorListRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,11 +19,7 @@ class ListTempatTimbulanSampahRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tts_kategori_id' => 'exists:tempat_timbulan_sampah_kategoris,id',
-            'tts_Sektor_id' => 'exists:tempat_timbulan_sampah_kategoris,id',
-            'nama_tempat' => 'string',
-            'alamat_tempat' => 'string',
-            'status' => 'string',
+            'tts_kategori_id' => 'required:exists:tempat_timbulan_sampah_kategoris,id',
             'page' => 'numeric|min:1',
             'size' => 'numeric|min:1|max:100',
         ];
@@ -32,6 +28,7 @@ class ListTempatTimbulanSampahRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'tts_kategori_id.required' => 'Kategori Tempat Timbulan Sampah tidak boleh kosong!',
             'page.min' => 'Minimum halaman adalah 1!',
             'size.min' => 'Minimum ukuran adalah 1!',
             'size.max' => 'Maksimum ukuran adalah 100!',

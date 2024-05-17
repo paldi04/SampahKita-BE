@@ -21,30 +21,25 @@ class DatabaseSeeder extends Seeder
         // Define default user roles
         $userRoles = [
             [
-                'id' => 1,
-                'code' => 'admin',
+                'id' => 'admin',
                 'name' => 'Administrator',
             ], [
-                'id' => 2,
-                'code' => 'oss',
+                'id' => 'oss',
                 'name' => 'Operator Sumber Sampah',
             ], [
-                'id' => 3,
-                'code' => 'oks',
+                'id' => 'oks',
                 'name' => 'Operator Kumpulan Sampah',
             ], [
-                'id' => 4,
-                'code' => 'dlh',
+                'id' => 'dlh',
                 'name' => 'DLH Kota/Kabupaten',
             ], [
-                'id' => 5,
-                'code' => 'supir',
+                'id' => 'supir',
                 'name' => 'Supir',
             ]
         ];
         UserRole::insert(array_map(function($role) {
             return [
-                'code' => $role['code'],
+                'id' => $role['id'],
                 'name' => $role['name'],
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -55,12 +50,12 @@ class DatabaseSeeder extends Seeder
         User::insert([
             [
                 'id' => Str::uuid()->toString(), // Generate UUID
-                'nik' => '0',
-                'name' => 'Admin SampahKita Jabar',
-                'user_role_id' => 1, // Default role for super admin
+                'name' => 'Admin Sampah Kita Jabar',
+                'user_role_id' => 'admin', // Default role for super admin
                 'phone_number' => '080000000000',
                 'email' => 'admin@sampahkitajabar.id',
                 'password' => Hash::make('P4$$word_admin_sampahkita_jabar'),
+                'status' => 'verified',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]
@@ -69,24 +64,21 @@ class DatabaseSeeder extends Seeder
         // Define default tempat timbulan sampah kategori
         $timbulanSampahKategori = [
             [
-                'id' => 1,
-                'code' => 'tss',
+                'id' => 'tss',
                 'name' => 'Tempat Sumber sampah',
             ], 
             [
-                'id' => 2,
-                'code' => 'tks',
+                'id' => 'tks',
                 'name' => 'Tempat Kumpulan Sampah',
             ], 
             [
-                'id' => 3,
-                'code' => 'tpa',
+                'id' => 'tpa',
                 'name' => 'Tempat Pembuangan Akhir',
             ]
         ];
         TempatTimbulanSampahKategori::insert(array_map(function($kategori) {
             return [
-                'code' => $kategori['code'],
+                'id' => $kategori['id'],
                 'name' => $kategori['name'],
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -96,159 +88,159 @@ class DatabaseSeeder extends Seeder
         // Define default tempat timbulan sampah sektor
         $TempatTimbulanSampahSektor = [
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Sekolah',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Perguruan Tinggi',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Pondok Pesantren',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Perkantoran',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Pasar',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Fasilitas Pelayanan kesehatan (RS/Puskesmas/Klinik)',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Retail Moden/Swalayan/Mini Market',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Pertokoan/Kios/Warung',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Industri',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Penginapan/Hotel/Wisma',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Rumah Makan/Restoran',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Lembaga Permasyarakatan (Lapas)',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Terminal Bus/Angkot',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Stasiun Kereta Api',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Pelabuhan Penumpang',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Bandara Udara',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Tempat Ibadah',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Tempat Wisata',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Taman Kota',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Hutan Kota',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Pemukiman',
             ],
             [
-                'tts_kategori_id' => 1,
+                'tts_kategori_id' => 'tss',
                 'name' => 'Kegiatan Bersih Sampah',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'TPS',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'TPST',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'TPS3R',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'Bank Sampah Induk',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'Bank Sampah Unit',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'Komposting',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'Rumah Kompos',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'Pusat Olah Organik',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'Pusat Daur Ulang',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'TPST diluar TPA',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'ITF',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'Biodigester',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'Incinerator',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'Pirolisis',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'Gasifikasi',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'RDF',
             ],
             [
-                'tts_kategori_id' => 2,
+                'tts_kategori_id' => 'tks',
                 'name' => 'Rumah Maggot',
             ],
         ];

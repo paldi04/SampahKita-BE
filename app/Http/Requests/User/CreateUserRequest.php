@@ -7,14 +7,14 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreUserRequest extends FormRequest
+class CreateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->user()->user_role_id === 1;
+        return auth()->user()->user_role_id === 'admin';
     }
     protected function failedAuthorization()
     {
@@ -27,12 +27,10 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nik' => 'required|numeric|unique:users',
             'name' => 'required|string|max:255',
             'user_role_id' => [
                 'required',
-                'numeric',
-                'min:2',
+                'string',
                 'exists:' . UserRole::class . ',id', // Ensure the ID exists in the user_roles table
             ],
             'phone_number' => 'required|string|regex:/^[0-9]{7,15}$/|starts_with:08|unique:users',

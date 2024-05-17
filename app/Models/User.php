@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements JWTSubject
 {
+    public $incrementing = false;
 
     /**
      * The attributes that are mass assignable.
@@ -18,6 +20,14 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'phone_number',
+        'user_role_id',
+        'email_verified_at',
+        'last_active_at',
+        'status',
+        'created_by',
+        'updated_by',
+        'tts_id',
     ];
 
     /**
@@ -26,8 +36,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password'
     ];
 
     /**
@@ -39,6 +48,11 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
         'id' => 'string',
     ];
+
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 
      /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -73,6 +87,11 @@ class User extends Authenticatable implements JWTSubject
     public function updatedBy()
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function tempatTimbulanSampah()
+    {
+        return $this->belongsTo(TempatTimbulanSampah::class, 'tts_id');
     }
 
     protected static function boot()

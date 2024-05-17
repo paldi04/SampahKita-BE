@@ -1,37 +1,47 @@
 <?php
 
-namespace App\Http\Requests\TempatTimbulanSampah;
+namespace App\Http\Requests\User;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ListTempatTimbulanSampahSektorRequest extends FormRequest
+class GetUserListRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->user()->user_role_id === 'admin';
     }
-    
+    protected function failedAuthorization()
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Unauthorized',
+            'data'    => []
+        ], 400));
+    }
     public function rules(): array
     {
         return [
-            'tts_kategori_id' => 'required:exists:tempat_timbulan_sampah_kategoris,id',
             'page' => 'numeric|min:1',
             'size' => 'numeric|min:1|max:100',
+            'user_role_id' => 'string|exists:user_roles,id',
+            'status' => 'string|in:verified,unverified',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'tts_kategori_id.required' => 'Kategori Tempat Timbulan Sampah tidak boleh kosong!',
             'page.min' => 'Minimum halaman adalah 1!',
             'size.min' => 'Minimum ukuran adalah 1!',
             'size.max' => 'Maksimum ukuran adalah 100!',
+            'user_role_id.exists' => 'Role user tidak ditemukan!',
+            'status.in' => 'Status tidak valid!'
         ];
     }
 
