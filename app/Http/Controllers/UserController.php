@@ -103,7 +103,7 @@ class UserController extends ApiController
     /**
      * Display the specified resource.
      */
-    public function GetUserDetail(GetUserDetailRequest $request)
+    public function getUserDetail(GetUserDetailRequest $request)
     {
         if ($request->id === 'me' || $request->id == auth()->user()->id) {
             return $this->sendResponse(auth()->user()->load(['userRole:id,name', 'createdBy:id,name', 'updatedBy:id,name', 'tempatTimbulanSampah:id,nama_tempat']));
@@ -120,36 +120,39 @@ class UserController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request)
+    public function updateUser(UpdateUserRequest $request)
     {
-        if ($id === 'me' || $id === auth()->user()->id) {
+        if ($request->id === 'me' || $request->id === auth()->user()->id) {
             $user = auth()->user();
         } else {
             if (auth()->user()->user_role_id !== 'admin') {
                 return $this->sendError('Unauthorized', [], 401);
             }
-            $user = User::find($id);
+            $user = User::find($request->id);
             if (!$user) {
                 return $this->sendError('User not found.', [], 404);
             }
         }
-        if ($request->phone_number && $request->phone_number !== $user->phone_number) {
-            $checkPhone = User::where('phone_number', $request->phone_number)->first();
-            if ($checkPhone) {
-                return $this->sendError('Phone number already exists.', [], 400);
-            }
-        }
-        if ($request->email && $request->email !== $user->email) {
-            $checkEmail = User::where('email', $request->email)->first();
-            if ($checkEmail) {
-                return $this->sendError('Email already exists.', [], 400);
-            }
-        }
         DB::beginTransaction();
         try {
-            $user->name = $request->name;
-            $user->phone_number = $request->phone_number;
-            $user->email = $request->email;
+            if ($request->name) {
+                $user->name = $request->name;
+            }
+            if ($request->phone_number && $request->phone_number !== $user->phone_number) {
+                $checkPhone = User::where('phone_number', $request->phone_number)->first();
+                if ($checkPhone) {
+                    return $this->sendError('Phone number already exists.', [], 400);
+                }
+            }
+            if ($request->email && $request->email !== $user->email) {
+                $checkEmail = User::where('email', $request->email)->first();
+                if ($checkEmail) {
+                    return $this->sendError('Email already exists.', [], 400);
+                }
+            }
+            if ($request->status) {
+                $user->status = $request->status;
+            }
             $user->save();
         } catch (\Exception $e) {
             DB::rollBack();

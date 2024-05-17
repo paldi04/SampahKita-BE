@@ -14,15 +14,17 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        $this->merge(['id' => $this->route('id')]);
         return true;
     }
     
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'phone_number' => 'required|string|regex:/^[0-9]{7,15}$/|starts_with:08',
-            'email' => 'required|email',
+            'name' => 'string|max:255',
+            'phone_number' => 'string|regex:/^[0-9]{7,15}$/|starts_with:08',
+            'email' => 'email',
+            'status' => 'in:verified,unverified,rejected',
         ];
     }
 
@@ -31,6 +33,7 @@ class UpdateUserRequest extends FormRequest
         return [
             'phone_number.regex' => 'Format nomor telepon tidak valid!',
             'phone_number.starts_with' => 'Nomor telepon harus diawali dengan 08!',
+            'status.in' => 'Status tidak valid!',
         ];
     }
 
