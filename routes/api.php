@@ -7,7 +7,7 @@ use App\Http\Controllers\UserController;
 
 
 Route::prefix('auth')->group(function () {
-    Route::post('/register/{user_role_id}/{tts_kategori_id}', [AuthController::class, 'register']);
+    Route::post('/register/tempat-timbulan-sampah', [AuthController::class, 'registerTempatTimbulanSampah']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/status', [AuthController::class, 'status']);
     Route::post('/refresh', [AuthController::class, 'refresh']);

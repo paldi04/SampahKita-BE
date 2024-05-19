@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\RegisterTempatTimbulanSampahRequest;
 use App\Models\TempatTimbulanSampah;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -20,20 +20,20 @@ class AuthController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'registerTempatTimbulanSampah']]);
     }
 
-    public function register(RegisterRequest $request)
+    public function registerTempatTimbulanSampah(RegisterTempatTimbulanSampahRequest $request)
     {
         DB::beginTransaction();
         try {
             $user = new User();
             $user->id = Str::uuid()->toString();
-            $user->name = $request->name ?? 'Operator ' . $request->tempat_timbulan_sampah['nama_tempat'];
-            $user->user_role_id = $request->user_role_id;
-            $user->phone_number = $request->phone_number;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
+            $user->name = 'Operator ' . $request->tempat_timbulan_sampah['nama_tempat'];
+            $user->user_role_id = $request->tempat_timbulan_sampah['tts_kategori_id'] == 'tss' ? 'oss' : 'oks';
+            $user->phone_number = $request->user['phone_number'];
+            $user->email = $request->user['email'];
+            $user->password = Hash::make($request->user['password']);
             $isCreated = $user->save();
             if (!$isCreated) {
                 DB::rollBack();
