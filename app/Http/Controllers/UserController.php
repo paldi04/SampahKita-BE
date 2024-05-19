@@ -51,7 +51,7 @@ class UserController extends ApiController
         $size = $request->input('size', 10);
         $offset = ($page - 1) * $size;
 
-        $users = User::select('id', 'name', 'created_at', 'updated_at', 'user_role_id', 'tts_id', 'last_active_at')
+        $users = User::select('id', 'name', 'status', 'created_at', 'updated_at', 'user_role_id', 'tts_id', 'last_active_at')
             ->where('user_role_id', '!=', 'admin')->with(['userRole:id,name', 'tempatTimbulanSampah:id,nama_tempat'])
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', '=', $request->status);
@@ -109,10 +109,18 @@ class UserController extends ApiController
      */
     public function getUserDetail(GetUserDetailRequest $request)
     {
+        $withData = [
+            'userRole:id,name',
+            'createdBy:id,name',
+            'updatedBy:id,name',
+            'tempatTimbulanSampah:id,nama_tempat,tts_kategori_id,tts_sektor_id,alamat_tempat,latitude,longitude,luas_lahan,luas_bangunan,panjang,lebar,sisa_lahan,kepemilikan_lahan,foto_tempat,status',
+            'tempatTimbulanSampah.tempatTimbulanSampahKategori:id,name',
+            'tempatTimbulanSampah.tempatTimbulanSampahSektor:id,name'
+        ];
         if ($request->id === 'me' || $request->id == auth()->user()->id) {
-            return $this->sendResponse(auth()->user()->load(['userRole:id,name', 'createdBy:id,name', 'updatedBy:id,name', 'tempatTimbulanSampah:id,nama_tempat']));
+            return $this->sendResponse(auth()->user()->load($withData));
         }
-        $user = User::where('id', $request->id)->with(['userRole:id,name', 'createdBy:id,name', 'updatedBy:id,name', 'tempatTimbulanSampah:id,nama_tempat'])->first();
+        $user = User::where('id', $request->id)->with($withData)->first();
         if (!$user) {
             return $this->sendError('User not found.', [], 404);
         }

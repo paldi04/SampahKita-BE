@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TempatTimbulanSampah\GetTempatTimbulanSampahDetailRequest;
 use App\Http\Requests\TempatTimbulanSampah\GetTempatTimbulanSampahKategoriListRequest;
 use App\Http\Requests\TempatTimbulanSampah\GetTempatTimbulanSampahSektorListRequest;
 use App\Http\Requests\TempatTimbulanSampah\GetTempatTimbulanSampahListRequest;
@@ -82,12 +83,12 @@ class TempatTimbulanSampahController extends ApiController
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', 'like', '%' . $request->status . '%');
             })
-            ->with(['tempatTimbulanSampahKategori', 'tempatTimbulanSampahSektor'])
+            ->with(['tempatTimbulanSampahKategori:id,name', 'tempatTimbulanSampahSektor:id,name'])
             ->offset($offset)->limit($size)->get();
 
         $total = TempatTimbulanSampah::when($request->nama_tempat, function ($query) use ($request) {
-                $query->where('nama_tempat', 'like', '%' . $request->nama_tempat . '%');
-            })
+            $query->where('nama_tempat', 'like', '%' . $request->nama_tempat . '%');
+        })
             ->when($request->tts_kategori_id, function ($query) use ($request) {
                 $query->where('tts_kategori_id', '=', $request->tts_kategori_id);
             })
@@ -110,5 +111,23 @@ class TempatTimbulanSampahController extends ApiController
             ],
         ];
         return $this->sendResponse($result);
+    }
+
+    public function getTempatTimbulanSampahDetail(GetTempatTimbulanSampahDetailRequest $request)
+    {
+        $withData = [
+            'tempatTimbulanSampahKategori:id,name',
+            'tempatTimbulanSampahSektor:id,name',
+            'createdBy:id,name',
+            'updatedBy:id,name',
+            'user:id,user_role_id,name,email,phone_number,last_active_at,tts_id',
+            'user.userRole:id,name'
+        ];
+        $tempatTimbulanSampah = TempatTimbulanSampah::where('id', '=', $request->id)->with($withData)->first();
+        if (!$tempatTimbulanSampah) {
+            return $this->sendError('Tempat Timbulan Sampah tidak ditemukan!', 404);
+        }
+
+        return $this->sendResponse($tempatTimbulanSampah);
     }
 }

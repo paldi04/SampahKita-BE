@@ -51,6 +51,10 @@ class TempatTimbulanSampah extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+    public function user()
+    {
+        return $this->hasMany(User::class, 'tts_id');
+    }
 
     protected static function boot()
     {

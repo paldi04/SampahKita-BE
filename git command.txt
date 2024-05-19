@@ -1,4 +1,4 @@
 git add .
-git commit -m "api delete user"
+git commit -m "api get timbulan sampah detail"
 git push origin development
 
