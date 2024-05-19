@@ -42,10 +42,10 @@ return new class extends Migration
             $table->string('kepemilikan_lahan');
             $table->string('foto_tempat')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('inactive');
-            $table->uuid('created_by');
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict')->onUpdate('cascade');
-            $table->uuid('updated_by');
-            $table->foreign('updated_by')->references('id')->on('users')->onDelete('restrict')->onUpdate('cascade');
+            $table->uuid('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
+            $table->uuid('updated_by')->nullable();
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
             $table->timestamps();
         });
     }

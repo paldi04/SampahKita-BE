@@ -29,7 +29,7 @@ class RegisterTempatTimbulanSampahRequest extends FormRequest
         return [
             'user.phone_number' => 'required|string|regex:/^[0-9]{7,15}$/|starts_with:08|unique:users,phone_number',
             'user.email' => 'required|email|unique:users,email',
-            'user.password' => 'required|string|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9])[\s\S]{4,}$/',
+            'user.password' => 'required|string|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9])[\s\S]{6,}$/',
             'tempat_timbulan_sampah.nama_tempat' => 'required|string|max:255',
             'tempat_timbulan_sampah.tts_kategori_id' => 'required|string|exists:tempat_timbulan_sampah_kategoris,id',
             'tempat_timbulan_sampah.tts_sektor_id' => 'nullable|exists:tempat_timbulan_sampah_sektors,id',

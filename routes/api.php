@@ -23,7 +23,7 @@ Route::prefix('user')->group(function () {
         Route::get('/list', [UserController::class, 'getUserList']);
         Route::get('/{id}', [UserController::class, 'getUserDetail']);
         Route::put('/{id}', [UserController::class, 'updateUser']);
-        Route::delete('/{id}', [UserController::class, 'destroy']);
+        Route::delete('/{id}', [UserController::class, 'deleteUser']);
     });
 });
 Route::prefix('tempat-timbulan-sampah')->group(function () {

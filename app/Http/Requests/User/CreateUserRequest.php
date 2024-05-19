@@ -27,12 +27,12 @@ class CreateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
             'user_role_id' => [
                 'required',
                 'string',
                 'exists:' . UserRole::class . ',id', // Ensure the ID exists in the user_roles table
             ],
+            'name' => 'required|string|max:255',
             'phone_number' => 'required|string|regex:/^[0-9]{7,15}$/|starts_with:08|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9])[\s\S]{4,}$/',

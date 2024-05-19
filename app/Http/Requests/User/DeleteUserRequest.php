@@ -2,12 +2,11 @@
 
 namespace App\Http\Requests\User;
 
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateUserRequest extends FormRequest
+class DeleteUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +15,7 @@ class UpdateUserRequest extends FormRequest
     {
         $id = $this->route('id');
         $this->merge(['id' => $id]);
-        return ($id === 'me' || $id == auth()->user()->id) || auth()->user()->user_role_id == 'admin';
+        return auth()->user()->user_role_id == 'admin' && $id !== 'me' && $id !== auth()->user()->id;
     }
     protected function failedAuthorization()
     {
@@ -29,19 +28,16 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string|max:255',
-            'phone_number' => 'string|regex:/^[0-9]{7,15}$/|starts_with:08',
-            'email' => 'email',
-            'status' => 'in:verified,unverified,rejected',
+            'id' => 'required|string',
+            'softDelete' => 'boolean',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'phone_number.regex' => 'Format nomor telepon tidak valid!',
-            'phone_number.starts_with' => 'Nomor telepon harus diawali dengan 08!',
-            'status.in' => 'Status tidak valid!',
+            'id.required' => 'ID tidak boleh kosong!',
+            'softDelete.boolean' => 'Soft delete harus berupa boolean!'
         ];
     }
 

@@ -20,7 +20,7 @@ class ChangePasswordRequest extends FormRequest
     {
         return [
             'old_password' => 'required|string',
-            'new_password' => 'required|string|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9])[\s\S]{4,}$/',
+            'new_password' => 'required|string|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9])[\s\S]{6,}$/',
             'confirm_password' => 'required|same:new_password',
         ];
     }

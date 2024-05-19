@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\User\GetUserDetailRequest;
 use App\Http\Requests\User\GetUserRoleListRequest;
 use App\Http\Requests\User\CreateUserRequest;
+use App\Http\Requests\User\DeleteUserRequest;
 use App\Http\Requests\User\GetUserListRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Models\User;
@@ -58,6 +59,9 @@ class UserController extends ApiController
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', '=', $request->status);
             })
+            ->when($request->user_role_id, function ($query) use ($request) {
+                $query->where('user_role_id', '=', $request->user_role_id);
+            })
             ->offset($offset)
             ->limit($size)
             ->get();
@@ -108,9 +112,6 @@ class UserController extends ApiController
         if ($request->id === 'me' || $request->id == auth()->user()->id) {
             return $this->sendResponse(auth()->user()->load(['userRole:id,name', 'createdBy:id,name', 'updatedBy:id,name', 'tempatTimbulanSampah:id,nama_tempat']));
         }
-        if (auth()->user()->user_role_id !== 'admin') {
-            return $this->sendError('Unauthorized', [], 401);
-        }
         $user = User::where('id', $request->id)->with(['userRole:id,name', 'createdBy:id,name', 'updatedBy:id,name', 'tempatTimbulanSampah:id,nama_tempat'])->first();
         if (!$user) {
             return $this->sendError('User not found.', [], 404);
@@ -125,9 +126,6 @@ class UserController extends ApiController
         if ($request->id === 'me' || $request->id === auth()->user()->id) {
             $user = auth()->user();
         } else {
-            if (auth()->user()->user_role_id !== 'admin') {
-                return $this->sendError('Unauthorized', [], 401);
-            }
             $user = User::find($request->id);
             if (!$user) {
                 return $this->sendError('User not found.', [], 404);
@@ -165,12 +163,9 @@ class UserController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function deleteUser(DeleteUserRequest $request)
     {
-        if ($id === 'me' || $id === auth()->user()->id || auth()->user()->user_role_id !== 'admin') {
-            return $this->sendError('Unauthorized', [], 401);
-        }
-        $user = User::find($id);
+        $user = User::find($request->id);
         if (!$user) {
             return $this->sendError('User not found.', [], 404);
         }
@@ -182,6 +177,6 @@ class UserController extends ApiController
             return $this->sendError('User deletion failed', ["error" => $e->getMessage()]);
         }
         DB::commit();
-        return $this->sendResponse(['id' => $id]);
+        return $this->sendResponse(['id' => $request->id]);
     }
 }
