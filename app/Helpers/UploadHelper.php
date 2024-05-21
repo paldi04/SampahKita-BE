@@ -25,7 +25,7 @@ function uploadBase64Image($base64Image, $uploadPath)
     }
 
     return [
-        'url' => $storedFilePath
+        'url' => 'public/' . $storedFilePath
     ];
 }
 

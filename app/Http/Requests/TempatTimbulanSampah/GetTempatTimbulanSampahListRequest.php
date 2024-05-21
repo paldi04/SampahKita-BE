@@ -13,7 +13,7 @@ class getTempatTimbulanSampahListRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->user()->user_role_id === 'admin';
     }
     
     public function rules(): array

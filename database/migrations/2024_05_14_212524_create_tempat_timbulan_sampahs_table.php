@@ -40,7 +40,7 @@ return new class extends Migration
             $table->decimal('lebar', 10, 2);
             $table->decimal('sisa_lahan', 10, 2);
             $table->string('kepemilikan_lahan');
-            $table->string('foto_tempat')->nullable();
+            $table->text('foto_tempat')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->uuid('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');

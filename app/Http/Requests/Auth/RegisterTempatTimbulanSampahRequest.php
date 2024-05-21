@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Models\UserRole;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -65,7 +64,7 @@ class RegisterTempatTimbulanSampahRequest extends FormRequest
             'tempat_timbulan_sampah.lebar.numeric' => 'Lebar harus berupa angka!',
             'tempat_timbulan_sampah.sisa_lahan.numeric' => 'Sisa lahan harus berupa angka!',
             'tempat_timbulan_sampah.foto_tempat.array' => 'Foto tempat harus berupa array!',
-            'tempat_timbulan_sampah.status.string' => 'Foto tempat harus berupa string!',
+            'tempat_timbulan_sampah.status.in' => 'Status harus berupa active atau inactive!'
         ];
     }
 

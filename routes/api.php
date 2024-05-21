@@ -31,4 +31,5 @@ Route::prefix('tempat-timbulan-sampah')->group(function () {
     Route::get('/sektor/list', [TempatTimbulanSampahController::class, 'getTempatTimbulanSampahSektorList']);
     Route::get('/list', [TempatTimbulanSampahController::class, 'getTempatTimbulanSampahList']);
     Route::get('/{id}', [TempatTimbulanSampahController::class, 'getTempatTimbulanSampahDetail']);
+    Route::put('/{id}', [TempatTimbulanSampahController::class, 'updateTempatTimbulanSampah']);
 });
