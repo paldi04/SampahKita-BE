@@ -9,7 +9,7 @@ class TempatTimbulanSampahSektor extends Model
 
     protected $fillable = [
         'tts_kategori_id',
-        'name',
+        'nama',
     ];
 
     public function tempatTimbulanSampah()

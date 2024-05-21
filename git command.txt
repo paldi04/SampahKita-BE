@@ -1,4 +1,4 @@
 git add .
-git commit -m "api update timbulan sampah detail"
+git commit -m "mengubah penamaan field"
 git push origin development
 

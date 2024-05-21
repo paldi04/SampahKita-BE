@@ -32,8 +32,8 @@ class CreateUserRequest extends FormRequest
                 'string',
                 'exists:' . UserRole::class . ',id', // Ensure the ID exists in the user_roles table
             ],
-            'name' => 'required|string|max:255',
-            'phone_number' => 'required|string|regex:/^[0-9]{7,15}$/|starts_with:08|unique:users',
+            'nama' => 'required|string|max:255',
+            'nomor_telepon' => 'required|string|regex:/^[0-9]{7,15}$/|starts_with:08|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9])[\s\S]{4,}$/',
         ];
@@ -42,8 +42,8 @@ class CreateUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'phone_number.regex' => 'Format nomor telepon tidak valid!',
-            'phone_number.starts_with' => 'Nomor telepon harus diawali dengan 08!',
+            'nomor_telepon.regex' => 'Format nomor telepon tidak valid!',
+            'nomor_telepon.starts_with' => 'Nomor telepon harus diawali dengan 08!',
             'username.regex' => 'Format username harus alfanumerik dan underscore saja!',
             'password.regex' => 'Format password harus mengandung huruf besar, huruf kecil, angka, dan karakter spesial!'
         ];

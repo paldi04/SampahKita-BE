@@ -9,7 +9,7 @@ class TempatTimbulanSampahKategori extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'name',
+        'nama',
     ];
 
     public function tempatTimbulanSampah()

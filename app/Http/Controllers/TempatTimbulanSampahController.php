@@ -26,7 +26,7 @@ class TempatTimbulanSampahController extends ApiController
         $size = $request->input('size', 10);
         $offset = ($page - 1) * $size;
 
-        $users = TempatTimbulanSampahKategori::select('id', 'name')->offset($offset)->limit($size)->get();
+        $users = TempatTimbulanSampahKategori::select('id', 'nama')->offset($offset)->limit($size)->get();
 
         $total = TempatTimbulanSampahKategori::count();
 
@@ -46,7 +46,7 @@ class TempatTimbulanSampahController extends ApiController
         $size = $request->input('size', 10);
         $offset = ($page - 1) * $size;
 
-        $users = TempatTimbulanSampahSektor::select('id', 'name')
+        $users = TempatTimbulanSampahSektor::select('id', 'nama')
             ->where('tts_kategori_id', '=', $request->tts_kategori_id)
             ->offset($offset)->limit($size)->get();
 
@@ -84,7 +84,7 @@ class TempatTimbulanSampahController extends ApiController
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', 'like', '%' . $request->status . '%');
             })
-            ->with(['tempatTimbulanSampahKategori:id,name', 'tempatTimbulanSampahSektor:id,name'])
+            ->with(['tempatTimbulanSampahKategori:id,nama', 'tempatTimbulanSampahSektor:id,nama'])
             ->offset($offset)->limit($size)->get();
 
         $total = TempatTimbulanSampah::when($request->nama_tempat, function ($query) use ($request) {
@@ -117,12 +117,12 @@ class TempatTimbulanSampahController extends ApiController
     public function getTempatTimbulanSampahDetail(GetTempatTimbulanSampahDetailRequest $request)
     {
         $withData = [
-            'tempatTimbulanSampahKategori:id,name',
-            'tempatTimbulanSampahSektor:id,name',
-            'createdBy:id,name',
-            'updatedBy:id,name',
-            'user:id,user_role_id,name,email,phone_number,last_active_at,tts_id',
-            'user.userRole:id,name'
+            'tempatTimbulanSampahKategori:id,nama',
+            'tempatTimbulanSampahSektor:id,nama',
+            'createdBy:id,nama',
+            'updatedBy:id,nama',
+            'user:id,user_role_id,nama,email,nomor_telepon,last_active_at,tts_id',
+            'user.userRole:id,nama'
         ];
         $tempatTimbulanSampah = TempatTimbulanSampah::where('id', '=', $request->id)->with($withData)->first();
         if (!$tempatTimbulanSampah) {

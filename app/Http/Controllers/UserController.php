@@ -28,7 +28,7 @@ class UserController extends ApiController
         $size = $request->input('size', 10);
         $offset = ($page - 1) * $size;
 
-        $userRoles = UserRole::select('id', 'name')->offset($offset)->limit($size)->get();
+        $userRoles = UserRole::select('id', 'nama')->offset($offset)->limit($size)->get();
 
         $total = UserRole::count();
 
@@ -51,8 +51,8 @@ class UserController extends ApiController
         $size = $request->input('size', 10);
         $offset = ($page - 1) * $size;
 
-        $users = User::select('id', 'name', 'status', 'created_at', 'updated_at', 'user_role_id', 'tts_id', 'last_active_at')
-            ->where('user_role_id', '!=', 'admin')->with(['userRole:id,name', 'tempatTimbulanSampah:id,nama_tempat'])
+        $users = User::select('id', 'nama', 'status', 'created_at', 'updated_at', 'user_role_id', 'tts_id', 'last_active_at')
+            ->where('user_role_id', '!=', 'admin')->with(['userRole:id,nama', 'tempatTimbulanSampah:id,nama_tempat'])
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', '=', $request->status);
             })
@@ -90,9 +90,9 @@ class UserController extends ApiController
         try {
             $user = new User();
             $user->id = Str::uuid()->toString();
-            $user->name = $request->name;
+            $user->nama = $request->nama;
             $user->user_role_id = $request->user_role_id;
-            $user->phone_number = $request->phone_number;
+            $user->nomor_telepon = $request->nomor_telepon;
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
             $user->save();
@@ -110,12 +110,12 @@ class UserController extends ApiController
     public function getUserDetail(GetUserDetailRequest $request)
     {
         $withData = [
-            'userRole:id,name',
-            'createdBy:id,name',
-            'updatedBy:id,name',
+            'userRole:id,nama',
+            'createdBy:id,nama',
+            'updatedBy:id,nama',
             'tempatTimbulanSampah:id,nama_tempat,tts_kategori_id,tts_sektor_id,alamat_tempat,latitude,longitude,luas_lahan,luas_bangunan,panjang,lebar,sisa_lahan,kepemilikan_lahan,foto_tempat,status',
-            'tempatTimbulanSampah.tempatTimbulanSampahKategori:id,name',
-            'tempatTimbulanSampah.tempatTimbulanSampahSektor:id,name'
+            'tempatTimbulanSampah.tempatTimbulanSampahKategori:id,nama',
+            'tempatTimbulanSampah.tempatTimbulanSampahSektor:id,nama'
         ];
         if ($request->id === 'me' || $request->id == auth()->user()->id) {
             return $this->sendResponse(auth()->user()->load($withData));
@@ -141,11 +141,11 @@ class UserController extends ApiController
         }
         DB::beginTransaction();
         try {
-            if ($request->name) {
-                $user->name = $request->name;
+            if ($request->nama) {
+                $user->nama = $request->nama;
             }
-            if ($request->phone_number && $request->phone_number !== $user->phone_number) {
-                $checkPhone = User::where('phone_number', $request->phone_number)->first();
+            if ($request->nomor_telepon && $request->nomor_telepon !== $user->nomor_telepon) {
+                $checkPhone = User::where('nomor_telepon', $request->nomor_telepon)->first();
                 if ($checkPhone) {
                     return $this->sendError('Phone number already exists.', [], 400);
                 }

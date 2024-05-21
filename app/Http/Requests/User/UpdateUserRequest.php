@@ -29,8 +29,8 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'string|max:255',
-            'phone_number' => 'string|regex:/^[0-9]{7,15}$/|starts_with:08',
+            'nama' => 'string|max:255',
+            'nomor_telepon' => 'string|regex:/^[0-9]{7,15}$/|starts_with:08',
             'email' => 'email',
             'status' => 'in:verified,unverified,rejected',
         ];
@@ -39,8 +39,8 @@ class UpdateUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'phone_number.regex' => 'Format nomor telepon tidak valid!',
-            'phone_number.starts_with' => 'Nomor telepon harus diawali dengan 08!',
+            'nomor_telepon.regex' => 'Format nomor telepon tidak valid!',
+            'nomor_telepon.starts_with' => 'Nomor telepon harus diawali dengan 08!',
             'status.in' => 'Status tidak valid!',
         ];
     }

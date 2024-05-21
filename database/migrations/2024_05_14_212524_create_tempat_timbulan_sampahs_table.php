@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('tempat_timbulan_sampah_kategoris', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->string('name');
+            $table->string('nama');
             $table->timestamps();
         });
         Schema::create('tempat_timbulan_sampah_sektors', function (Blueprint $table) {
             $table->id();
             $table->string('tts_kategori_id')->comment('ID Kategori Tempat Timbulan Sampah');
             $table->foreign('tts_kategori_id')->references('id')->on('tempat_timbulan_sampah_kategoris')->onDelete('restrict')->onUpdate('cascade');
-            $table->string('name');
+            $table->string('nama');
             $table->timestamps();
         });
         Schema::create('tempat_timbulan_sampahs', function (Blueprint $table) {

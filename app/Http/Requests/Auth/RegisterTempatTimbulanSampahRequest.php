@@ -26,7 +26,7 @@ class RegisterTempatTimbulanSampahRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user.phone_number' => 'required|string|regex:/^[0-9]{7,15}$/|starts_with:08|unique:users,phone_number',
+            'user.nomor_telepon' => 'required|string|regex:/^[0-9]{7,15}$/|starts_with:08|unique:users,nomor_telepon',
             'user.email' => 'required|email|unique:users,email',
             'user.password' => 'required|string|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9])[\s\S]{6,}$/',
             'tempat_timbulan_sampah.nama_tempat' => 'required|string|max:255',
@@ -51,9 +51,9 @@ class RegisterTempatTimbulanSampahRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user.name.max' => 'Nama tidak boleh lebih dari 255 karakter!',
-            'user.phone_number.regex' => 'Format nomor telepon tidak valid!',
-            'user.phone_number.starts_with' => 'Nomor telepon harus diawali dengan 08!',
+            'user.nama.max' => 'Nama tidak boleh lebih dari 255 karakter!',
+            'user.nomor_telepon.regex' => 'Format nomor telepon tidak valid!',
+            'user.nomor_telepon.starts_with' => 'Nomor telepon harus diawali dengan 08!',
             'user.username.regex' => 'Format username harus alfanumerik dan underscore saja!',
             'user.password.regex' => 'Format password harus mengandung huruf besar, huruf kecil, angka, dan karakter spesial!',
             'tempat_timbulan_sampah.tts_kategori_id.exists' => 'ID kategori tempat timbulan sampah tidak valid!',

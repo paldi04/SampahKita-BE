@@ -29,9 +29,9 @@ class AuthController extends ApiController
         try {
             $user = new User();
             $user->id = Str::uuid()->toString();
-            $user->name = 'Operator ' . $request->tempat_timbulan_sampah['nama_tempat'];
+            $user->nama = 'Operator ' . $request->tempat_timbulan_sampah['nama_tempat'];
             $user->user_role_id = $request->tempat_timbulan_sampah['tts_kategori_id'] == 'tss' ? 'oss' : 'oks';
-            $user->phone_number = $request->user['phone_number'];
+            $user->nomor_telepon = $request->user['nomor_telepon'];
             $user->email = $request->user['email'];
             $user->password = Hash::make($request->user['password']);
             $isCreated = $user->save();
@@ -103,7 +103,7 @@ class AuthController extends ApiController
      */
     public function login(LoginRequest $request)
     {
-        $field = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone_number';
+        $field = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'nomor_telepon';
         $credentials = array(
             $field => $request->username,
             'password' => $request->password

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_roles', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->string('name');
+            $table->string('nama');
             $table->timestamps();
         });
 
@@ -21,8 +21,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('user_role_id'); 
             $table->foreign('user_role_id')->references('id')->on('user_roles')->onDelete('restrict')->onUpdate('cascade');
-            $table->string('name');
-            $table->string('phone_number', 15)->unique();
+            $table->string('nama');
+            $table->string('nomor_telepon', 15)->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

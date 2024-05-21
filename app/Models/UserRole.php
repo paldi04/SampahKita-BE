@@ -14,7 +14,7 @@ class UserRole extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'nama',
     ];
 
     protected $cast = [
