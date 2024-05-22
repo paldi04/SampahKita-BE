@@ -9,6 +9,7 @@ use App\Models\TempatTimbulanSampah;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class AuthController extends ApiController
@@ -60,9 +61,7 @@ class AuthController extends ApiController
                 $uploadPath = 'tempat-timbunan-sampah/' . $tempatTimbulanSampah->id . '/foto-tempat';
                 $uploadResult = uploadBase64Image($request->tempat_timbulan_sampah['foto_tempat'][$i], $uploadPath) ;
                 if (!$uploadResult['url']) {
-                    for ($j = 0; $j < $i; $j++) {
-                        unlink($foto_tempat[$j]);
-                    }
+                    Storage::delete($foto_tempat);
                     DB::rollBack();
                     return $this->sendError($uploadResult['error']);
                 }
@@ -73,18 +72,14 @@ class AuthController extends ApiController
             $tempatTimbulanSampah->updated_by = $user->id ;
             $isCreated = $tempatTimbulanSampah->save();
             if (!$isCreated) {
-                for ($j = 0; $j < $i; $j++) {
-                    unlink($foto_tempat[$j]);
-                }
+                Storage::delete($foto_tempat);
                 DB::rollBack();
                 return $this->sendError('Pembuatan tempat timbulan gagal, silahkan coba kembali beberapa saat lagi!');
             }
             $user->tts_id = $tempatTimbulanSampah->id;
             $isUpdated = $user->update();
             if (!$isUpdated) {
-                for ($j = 0; $j < $i; $j++) {
-                    unlink($foto_tempat[$j]);
-                }
+                Storage::delete($foto_tempat);
                 DB::rollBack();
                 return $this->sendError('Pembuatan akun gagal, silahkan coba kembali beberapa saat lagi!');
             }

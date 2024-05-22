@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SampahController;
 use App\Http\Controllers\TempatTimbulanSampahController;
 use App\Http\Controllers\UserController;
 
@@ -32,4 +33,9 @@ Route::prefix('tempat-timbulan-sampah')->group(function () {
     Route::get('/list', [TempatTimbulanSampahController::class, 'getTempatTimbulanSampahList']);
     Route::get('/{id}', [TempatTimbulanSampahController::class, 'getTempatTimbulanSampahDetail']);
     Route::put('/{id}', [TempatTimbulanSampahController::class, 'updateTempatTimbulanSampah']);
+});
+Route::prefix('sampah')->group(function () {
+    Route::get('/kategori/list', [SampahController::class, 'getSampahKategoriList']);
+    Route::post('/masuk', [SampahController::class, 'storeSampahMasuk']);
+    Route::get('/masuk/list', [SampahController::class, 'getSampahMasukList']);
 });

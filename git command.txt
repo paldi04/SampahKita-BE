@@ -1,4 +1,4 @@
 git add .
-git commit -m "mengubah penamaan field"
+git commit -m "api get kategori sampah, add & get sampah masuk"
 git push origin development
 
