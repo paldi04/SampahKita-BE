@@ -31,6 +31,6 @@ COPY . .
 # Generate the autoload files
 RUN composer dump-autoload --no-scripts --optimize
 
-# Expose port 9000 and start php-fpm server
-EXPOSE 9000
+# Expose port 8084 and start php-fpm server
+EXPOSE 8084
 CMD ["php-fpm"]
