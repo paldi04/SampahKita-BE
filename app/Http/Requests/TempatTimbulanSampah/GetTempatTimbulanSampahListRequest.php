@@ -16,6 +16,15 @@ class getTempatTimbulanSampahListRequest extends FormRequest
         return auth()->user()->user_role_id === 'admin';
     }
     
+    protected function failedAuthorization()
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Unauthorized',
+            'data'    => []
+        ], 400));
+    }
+    
     public function rules(): array
     {
         return [

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Sampah\GetSampahKategoriListRequest;
 use App\Http\Requests\Sampah\GetSampahMasukListRequest;
 use App\Http\Requests\Sampah\StoreSampahMasukRequest;
+use App\Http\Requests\Sampah\UpdateSampahMasukRequest;
 use App\Models\SampahKategori;
 use App\Models\SampahMasuk;
 use Illuminate\Support\Facades\DB;
@@ -69,9 +70,31 @@ class SampahController extends ApiController
         $size = $request->input('size', 10);
         $offset = ($page - 1) * $size;
 
-        $users = SampahMasuk::offset($offset)->limit($size)->get();
+        $users = SampahMasuk::select('id', 'tts_id', 'sampah_kategori_id', 'waktu_masuk', 'berat_kg', 'created_by')
+            ->with('tempatTimbulanSampah:id,nama_tempat', 'sampahKategori:id,nama', 'createdBy:id,nama')
+            ->where('tts_id', '=', $request->tts_id)
+            ->when($request->sampah_kategori_id, function ($query) use ($request) {
+                $query->where('sampah_kategori_id', '=', $request->sampah_kategori_id);
+            })
+            ->when($request->start_date, function ($query) use ($request) {
+                $query->where('waktu_masuk', '>=', $request->start_date);
+            })
+            ->when($request->end_date, function ($query) use ($request) {
+                $query->where('waktu_masuk', '<=', $request->end_date);
+            })
+            ->offset($offset)->limit($size)->get();
 
-        $total = SampahMasuk::count();
+        $total = SampahMasuk::where('tts_id', '=', $request->tts_id)
+            ->when($request->sampah_kategori_id, function ($query) use ($request) {
+                $query->where('sampah_kategori_id', '=', $request->sampah_kategori_id);
+            })
+            ->when($request->start_date, function ($query) use ($request) {
+                $query->where('waktu_masuk', '>=', $request->start_date);
+            })
+            ->when($request->end_date, function ($query) use ($request) {
+                $query->where('waktu_masuk', '<=', $request->end_date);
+            })
+            ->count();
 
         $result = [
             'list' => $users,
@@ -81,5 +104,38 @@ class SampahController extends ApiController
             ],
         ];
         return $this->sendResponse($result);
+    }
+
+    public function updateSampahMasuk(UpdateSampahMasukRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $sampahMasuk = SampahMasuk::find($request->id);
+            if (!$sampahMasuk) {
+                return $this->sendError('Sampah masuk not found', [], 404);
+            }
+
+            $sampahMasuk->tts_id = $request->tts_id;
+            $sampahMasuk->sampah_kategori_id = $request->sampah_kategori_id;
+
+            if ($request->foto_sampah) {
+                $uploadPath = 'tempat-timbunan-sampah/' . $sampahMasuk->tts_id . '/foto-sampah-masuk';
+                $uploadResult = uploadBase64Image($request->foto_sampah, $uploadPath) ;
+                if (!$uploadResult['url']) {
+                    DB::rollBack();
+                    return $this->sendError($uploadResult['error']);
+                }
+                $sampahMasuk->foto_sampah = $uploadResult['url'];
+            }
+
+            $sampahMasuk->waktu_masuk = $request->waktu_masuk;
+            $sampahMasuk->berat_kg = $request->berat_kg;
+            $sampahMasuk->save();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError('Failed to update sampah masuk', ["error" => $e->getMessage()]);
+        }
+        DB::commit();
+        return $this->sendResponse($sampahMasuk);
     }
 }

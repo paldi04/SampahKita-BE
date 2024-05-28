@@ -1,4 +1,4 @@
 git add .
-git commit -m "api get kategori sampah, add & get sampah masuk"
+git commit -m "add filter date & owner validation on get sampah masuk list"
 git push origin development
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Sampah;
 
+use App\Models\SampahKategori;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -10,25 +11,35 @@ class GetSampahMasukListRequest extends FormRequest
 {
     public function authorize(): bool
     {
+        $this->merge(['tts_id' => $this->user()->tts_id]);
         return true;
     }
     
     public function rules(): array
     {
         return [
-            'sampah_kategori_id' => 'numeric',
-            'tts_id' => 'string',
+            'tts_id' => 'required|string',
+            'sampah_kategori_id' => [
+                'numeric',
+                'exists:' . SampahKategori::class . ',id', // Ensure the ID exists
+            ],
             'page' => 'numeric|min:1',
             'size' => 'numeric|min:1|max:100',
+            'start_date' => 'date_format:Y-m-d',
+            'end_date' => 'date_format:Y-m-d',
         ];
     }
 
     public function messages(): array
     {
         return [
+            'tts_id.required' => 'ID tempat timbulan sampah wajib diisi!',
+            'sampah_kategori_id.exists' => 'ID kategori sampah tidak valid!',
             'page.min' => 'Minimum halaman adalah 1!',
             'size.min' => 'Minimum ukuran adalah 1!',
             'size.max' => 'Maksimum ukuran adalah 100!',
+            'start_date.date_format' => 'Format tanggal awal tidak valid! (Contoh: 2024-05-01)',
+            'end_date.date_format' => 'Format tanggal akhir tidak valid! (Contoh: 2024-05-31)',
         ];
     }
 

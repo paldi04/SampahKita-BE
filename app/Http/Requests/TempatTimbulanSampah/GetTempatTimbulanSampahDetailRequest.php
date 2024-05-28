@@ -20,6 +20,15 @@ class GetTempatTimbulanSampahDetailRequest extends FormRequest
         return $this->user()->tts_id === $this->route('id');
     }
     
+    protected function failedAuthorization()
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Unauthorized',
+            'data'    => []
+        ], 400));
+    }
+    
     public function rules(): array
     {
         return [

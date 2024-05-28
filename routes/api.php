@@ -38,4 +38,5 @@ Route::prefix('sampah')->group(function () {
     Route::get('/kategori/list', [SampahController::class, 'getSampahKategoriList']);
     Route::post('/masuk', [SampahController::class, 'storeSampahMasuk']);
     Route::get('/masuk/list', [SampahController::class, 'getSampahMasukList']);
+    Route::put('/masuk/{id}', [SampahController::class, 'UpdateSampahMasuk']);
 });
