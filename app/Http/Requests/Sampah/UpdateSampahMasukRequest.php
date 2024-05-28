@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Sampah;
 
 use App\Models\SampahKategori;
-use App\Models\TempatTimbulanSampah;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -15,10 +14,15 @@ class UpdateSampahMasukRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $this->merge([
-            'tts_id' => auth()->user()->tts_id
-        ]);
-        return auth()->user()->user_role_id === 'oss' && auth()->user()->status === 'verified';
+        $this->merge(['id' => $this->route('id')]);
+        if (auth()->user()->user_role_id === 'admin') {
+            return true;
+        }
+        if (auth()->user()->user_role_id === 'oss' && auth()->user()->status === 'verified') {
+            $this->merge(['tts_id' => auth()->user()->tts_id]);
+            return true;
+        }
+        return false;
     }
     protected function failedAuthorization()
     {
@@ -31,19 +35,15 @@ class UpdateSampahMasukRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tts_id' => [
-                'required',
-                'string',
-                'exists:' . TempatTimbulanSampah::class . ',id', // Ensure the ID exists
-            ],
+            'id' => 'required|string', // Add 'id' field validation
             'sampah_kategori_id' => [
                 'required',
                 'numeric',
                 'exists:' . SampahKategori::class . ',id', // Ensure the ID exists
             ],
-            'foto_sampah' => 'required|string',
-            'waktu_masuk' => 'required|date_format:Y-m-d H:i:s',
-            'berat_kg' => 'required|numeric',
+            'foto_sampah' => 'string',
+            'waktu_masuk' => 'date_format:Y-m-d H:i:s',
+            'berat_kg' => 'numeric',
         ];
     }
 

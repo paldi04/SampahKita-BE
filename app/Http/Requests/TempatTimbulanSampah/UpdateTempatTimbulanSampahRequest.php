@@ -30,6 +30,7 @@ class UpdateTempatTimbulanSampahRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id' => 'required|string',
             'nama_tempat' => 'string|max:255',
             'alamat_tempat' => 'string|max:255',
             'afiliasi' => 'nullable|string|max:255',

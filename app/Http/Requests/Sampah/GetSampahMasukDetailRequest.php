@@ -1,22 +1,27 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Sampah;
 
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateUserRequest extends FormRequest
+class GetSampahMasukDetailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $id = $this->route('id');
-        $this->merge(['id' => $id]);
-        return ($id === 'me' || $id == auth()->user()->id) || auth()->user()->user_role_id == 'admin';
+        $this->merge(['id' => $this->route('id')]);
+        if (auth()->user()->user_role_id === 'admin') {
+            return true;
+        }
+        if (auth()->user()->user_role_id === 'oss' && auth()->user()->status === 'verified') {
+            $this->merge(['tts_id' => auth()->user()->tts_id]);
+            return true;
+        }
+        return false;
     }
     protected function failedAuthorization()
     {
@@ -29,20 +34,14 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|string',
-            'nama' => 'string|max:255',
-            'nomor_telepon' => 'string|regex:/^[0-9]{7,15}$/|starts_with:08',
-            'email' => 'email',
-            'status' => 'in:verified,unverified,rejected',
+            'id' => 'required|string', // Add 'id' field validation
         ];
     }
 
     public function messages(): array
     {
         return [
-            'nomor_telepon.regex' => 'Format nomor telepon tidak valid!',
-            'nomor_telepon.starts_with' => 'Nomor telepon harus diawali dengan 08!',
-            'status.in' => 'Status tidak valid!',
+            'id.required' => 'ID tidak boleh kosong!',
         ];
     }
 

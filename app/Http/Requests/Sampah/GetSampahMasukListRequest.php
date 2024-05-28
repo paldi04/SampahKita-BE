@@ -11,14 +11,20 @@ class GetSampahMasukListRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $this->merge(['tts_id' => $this->user()->tts_id]);
-        return true;
+        if ($this->user()->user_role_id === 'admin') {
+            return true;
+        }
+        if ($this->user()->user_role_id === 'oss') {
+            $this->merge(['tts_id' => $this->user()->tts_id]);
+            return true;
+        }
+        return false;
     }
     
     public function rules(): array
     {
         return [
-            'tts_id' => 'required|string',
+            'tts_id' => 'string',
             'sampah_kategori_id' => [
                 'numeric',
                 'exists:' . SampahKategori::class . ',id', // Ensure the ID exists
@@ -33,7 +39,6 @@ class GetSampahMasukListRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'tts_id.required' => 'ID tempat timbulan sampah wajib diisi!',
             'sampah_kategori_id.exists' => 'ID kategori sampah tidak valid!',
             'page.min' => 'Minimum halaman adalah 1!',
             'size.min' => 'Minimum ukuran adalah 1!',

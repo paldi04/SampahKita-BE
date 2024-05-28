@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Sampah\GetSampahKategoriListRequest;
+use App\Http\Requests\Sampah\GetSampahMasukDetailRequest;
 use App\Http\Requests\Sampah\GetSampahMasukListRequest;
 use App\Http\Requests\Sampah\StoreSampahMasukRequest;
 use App\Http\Requests\Sampah\UpdateSampahMasukRequest;
@@ -55,7 +56,11 @@ class SampahController extends ApiController
 
             $sampahMasuk->waktu_masuk = $request->waktu_masuk;
             $sampahMasuk->berat_kg = $request->berat_kg;
-            $sampahMasuk->save();
+            $result = $sampahMasuk->save();
+            if (!$result) {
+                DB::rollBack();
+                return $this->sendError('Tambah data sampah masuk gagal, silahkan coba beberapa lagi!');
+            }
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->sendError('Failed to store sampah masuk', ["error" => $e->getMessage()]);
@@ -106,19 +111,30 @@ class SampahController extends ApiController
         return $this->sendResponse($result);
     }
 
+    public function getSampahMasukDetail(GetSampahMasukDetailRequest $request)
+    {
+        $sampahMasuk = SampahMasuk::with('tempatTimbulanSampah:id,nama_tempat', 'sampahKategori:id,nama', 'createdBy:id,nama', 'updatedBy:id,nama')
+            ->where('id', '=', $request->id)
+            ->where('tts_id', '=', $request->tts_id)
+            ->first();
+        if (!$sampahMasuk) {
+            return $this->sendError('Sampah masuk tidak ditemukan!', [], 404);
+        }
+        return $this->sendResponse($sampahMasuk);
+    }
+
     public function updateSampahMasuk(UpdateSampahMasukRequest $request)
     {
         DB::beginTransaction();
         try {
-            $sampahMasuk = SampahMasuk::find($request->id);
+            $sampahMasuk = SampahMasuk::where('id', $request->id)->where('tts_id', $request->tts_id)->first();
             if (!$sampahMasuk) {
-                return $this->sendError('Sampah masuk not found', [], 404);
+                return $this->sendError('Sampah masuk tidak ditemukan!', [], 404);
             }
 
-            $sampahMasuk->tts_id = $request->tts_id;
-            $sampahMasuk->sampah_kategori_id = $request->sampah_kategori_id;
-
+            $sampahMasuk->sampah_kategori_id = $request->sampah_kategori_id ?? $sampahMasuk->sampah_kategori_id;
             if ($request->foto_sampah) {
+                $old_foto_sampah = $sampahMasuk->foto_sampah;
                 $uploadPath = 'tempat-timbunan-sampah/' . $sampahMasuk->tts_id . '/foto-sampah-masuk';
                 $uploadResult = uploadBase64Image($request->foto_sampah, $uploadPath) ;
                 if (!$uploadResult['url']) {
@@ -130,7 +146,14 @@ class SampahController extends ApiController
 
             $sampahMasuk->waktu_masuk = $request->waktu_masuk;
             $sampahMasuk->berat_kg = $request->berat_kg;
-            $sampahMasuk->save();
+            $result = $sampahMasuk->save();
+            if (!$result) {
+                DB::rollBack();
+                return $this->sendError('Update data sampah masuk gagal, silahkan coba beberapa lagi!');
+            }
+            if ($request->foto_sampah && $old_foto_sampah) {
+                Storage::delete($old_foto_sampah);
+            }
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->sendError('Failed to update sampah masuk', ["error" => $e->getMessage()]);

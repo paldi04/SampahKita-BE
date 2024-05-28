@@ -163,9 +163,7 @@ class TempatTimbulanSampahController extends ApiController
                     $uploadPath = 'tempat-timbunan-sampah/' . $tempatTimbulanSampah->id . '/foto-tempat';
                     $uploadResult = uploadBase64Image($request->foto_tempat[$i], $uploadPath) ;
                     if (!$uploadResult['url']) {
-                        for ($j = 0; $j < $i; $j++) {
-                            Storage::delete($foto_tempat);
-                        }
+                        Storage::delete($foto_tempat);
                         DB::rollBack();
                         return $this->sendError($uploadResult['error']);
                     }
@@ -179,7 +177,9 @@ class TempatTimbulanSampahController extends ApiController
                 DB::rollBack();
                 return $this->sendError('Update Tempat Timbulan Sampah gagal, silahkan coba kembali beberapa saat lagi!');
             }
-            Storage::delete($old_foto_tempat);
+            if ($request->foto_tempat && $old_foto_tempat) {
+                Storage::delete($old_foto_tempat);
+            }
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->sendError('Update Tempat Timbulan Sampah gagal, silahkan coba kembali beberapa saat lagi!', [ "error" => $e->getMessage() ]);
