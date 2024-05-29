@@ -23,6 +23,8 @@ services:
       MYSQL_PASSWORD: P4@ssword!
     volumes:
       - mysql_data:/var/lib/mysql
+    ports:
+      - "8081:8081"
     networks:
       - sampahkitajabar
 
