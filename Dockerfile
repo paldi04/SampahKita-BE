@@ -34,10 +34,7 @@ COPY . /var/www
 COPY --chown=www-data:www-data . /var/www
 
 # Install Composer dependencies
-RUN composer install --no-scripts --no-autoloader
-
-# Generate autoload files
-RUN composer dump-autoload --optimize
+RUN composer install --no-interaction --optimize-autoloader
 
 # Change current user to www
 USER www-data
