@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  sampahkitajabar-be:
+  backend:
     build:
       context: .
     container_name: sampahkitajabar-be
@@ -15,7 +15,7 @@ services:
       - sampahkitajabar
 
   mysql:
-    image: mysql:latest
+    image: mysql
     container_name: sampahkitajabar-mysql
     restart: unless-stopped
     environment:
