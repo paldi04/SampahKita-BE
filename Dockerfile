@@ -1,7 +1,7 @@
 FROM php:8.2-fpm
 
 # Set working directory
-WORKDIR /app
+WORKDIR /var/www
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -28,10 +28,10 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy existing application directory contents
-COPY . /app
+COPY . /var/www
 
 # Copy existing application directory permissions
-COPY --chown=www-data:www-data . /app
+COPY --chown=www-data:www-data . /var/www
 
 # Install Composer dependencies
 RUN composer install --no-interaction --optimize-autoloader

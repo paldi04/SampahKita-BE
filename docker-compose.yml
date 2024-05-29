@@ -6,7 +6,7 @@ services:
       context: .
     container_name: sampahkitajabar-be
     restart: unless-stopped
-    working_dir: /app
+    working_dir: /var/www
     ports:
       - "8081:8081"
     networks:
