@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  app:
+  sampahkitajabar-be:
     build:
       context: .
     container_name: sampahkitajabar-be
