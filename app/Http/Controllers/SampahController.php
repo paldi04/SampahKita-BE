@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Sampah\GetSampahKategoriListRequest;
 use App\Http\Requests\Sampah\GetSampahMasukDetailRequest;
 use App\Http\Requests\Sampah\GetSampahMasukListRequest;
+use App\Http\Requests\Sampah\GetSampahMasukStatusRequest;
 use App\Http\Requests\Sampah\StoreSampahMasukRequest;
 use App\Http\Requests\Sampah\UpdateSampahMasukRequest;
 use App\Models\SampahKategori;
@@ -160,5 +161,24 @@ class SampahController extends ApiController
         }
         DB::commit();
         return $this->sendResponse($sampahMasuk);
+    }
+
+    public function getSampahMasukStatus (GetSampahMasukStatusRequest $request)
+    {
+        $sampahMasuk = SampahMasuk::select('sampah_kategori_id', DB::raw('SUM(berat_kg) as berat_kg'), DB::raw('MAX(updated_at) as latest_updated_at'))
+            ->groupBy('sampah_kategori_id')
+            ->with('sampahKategori:id,nama')
+            ->get();
+
+        $sampahMasuk = $sampahMasuk->map(function ($item) {
+            $item->status = 'unprocessed';
+            return $item;
+        });
+        $result = [
+            'total_berat_kg' => $sampahMasuk->sum('berat_kg'),
+            'list' => $sampahMasuk,
+        ];
+        
+        return $this->sendResponse($result);
     }
 }
