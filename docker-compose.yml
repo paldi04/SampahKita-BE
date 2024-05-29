@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+    container_name: sampahkitajabar-be
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    ports:
+      - "8081:8081"
+    networks:
+      - sampahkitajabar
+
+  mysql:
+    image: mysql:latest
+    container_name: sampahkitajabar-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: sampahkitajabar
+      MYSQL_ROOT_PASSWORD: e91271f03015ff1be85b692a1a2b0875
+      MYSQL_USER: sampahkitajabar
+      MYSQL_PASSWORD: P4@ssword!
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - sampahkitajabar
+
+networks:
+  sampahkitajabar:
+
+volumes:
+  mysql_data:
