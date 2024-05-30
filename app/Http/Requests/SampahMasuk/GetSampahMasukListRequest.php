@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Sampah;
+namespace App\Http\Requests\SampahMasuk;
 
 use App\Models\SampahKategori;
 use Illuminate\Foundation\Http\FormRequest;
@@ -11,14 +11,8 @@ class GetSampahMasukListRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        if ($this->user()->user_role_id === 'admin') {
-            return true;
-        }
-        if ($this->user()->user_role_id === 'oss') {
-            $this->merge(['tts_id' => $this->user()->tts_id]);
-            return true;
-        }
-        return false;
+        $this->merge(['tts_id' => $this->user()->tts_id]);
+        return $this->user()->user_role_id === 'oss';
     }
     
     protected function failedAuthorization()

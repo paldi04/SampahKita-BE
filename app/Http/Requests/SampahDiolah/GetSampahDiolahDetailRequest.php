@@ -1,26 +1,27 @@
 <?php
 
-namespace App\Http\Requests\Sampah;
+namespace App\Http\Requests\SampahDiolah;
 
-use App\Models\SampahKategori;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class GetSampahMasukStatusRequest extends FormRequest
+class GetSampahDiolahDetailRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
-        if ($this->user()->user_role_id === 'admin') {
-            return true;
+        $this->merge(['id' => $this->route('id')]);
+        if (auth()->user()->user_role_id === 'oss') {
+            $this->merge(['tss_id' => auth()->user()->tts_id]);
         }
-        if ($this->user()->user_role_id === 'oss') {
-            $this->merge(['tts_id' => $this->user()->tts_id]);
-            return true;
+        if (auth()->user()->user_role_id === 'oks') {
+            $this->merge(['tks_id' => auth()->user()->tts_id]);
         }
-        return false;
+        return auth()->user()->user_role_id === 'admin' || auth()->user()->user_role_id === 'oss' || auth()->user()->user_role_id === 'oks';
     }
-    
     protected function failedAuthorization()
     {
         throw new HttpResponseException(response()->json([
@@ -29,22 +30,19 @@ class GetSampahMasukStatusRequest extends FormRequest
             'data'    => []
         ], 400));
     }
-    
     public function rules(): array
     {
         return [
-            'tts_id' => 'string',
-            'sampah_kategori_id' => [
-                'numeric',
-                'exists:' . SampahKategori::class . ',id', // Ensure the ID exists
-            ]
+            'id' => 'required|string', // Add 'id' field validation
+            'tts_id' => 'nullable|string',
+            'tks_id' => 'nullable|string',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'sampah_kategori_id.exists' => 'ID kategori sampah tidak valid!'
+            'id.required' => 'ID tidak boleh kosong!',
         ];
     }
 

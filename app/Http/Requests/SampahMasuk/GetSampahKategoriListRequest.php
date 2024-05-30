@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Sampah;
+namespace App\Http\Requests\SampahMasuk;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;

@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Requests\TempatTimbulanSampah;
+namespace App\Http\Requests\SampahMasuk;
 
+use App\Models\SampahKategori;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class getTempatTimbulanSampahListRequest extends FormRequest
+class GetSampahMasukStatusRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return true;
+        $this->merge(['tts_id' => $this->user()->tts_id]);
+        return $this->user()->user_role_id === 'oss';
     }
     
     protected function failedAuthorization()
@@ -28,22 +27,18 @@ class getTempatTimbulanSampahListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tts_kategori_id' => 'exists:tempat_timbulan_sampah_kategoris,id',
-            'tts_Sektor_id' => 'exists:tempat_timbulan_sampah_kategoris,id',
-            'nama_tempat' => 'string',
-            'alamat_tempat' => 'string',
-            'status' => 'string',
-            'page' => 'numeric|min:1',
-            'size' => 'numeric|min:1|max:100',
+            'tts_id' => 'string',
+            'sampah_kategori_id' => [
+                'numeric',
+                'exists:' . SampahKategori::class . ',id', // Ensure the ID exists
+            ]
         ];
     }
 
     public function messages(): array
     {
         return [
-            'page.min' => 'Minimum halaman adalah 1!',
-            'size.min' => 'Minimum ukuran adalah 1!',
-            'size.max' => 'Maksimum ukuran adalah 100!',
+            'sampah_kategori_id.exists' => 'ID kategori sampah tidak valid!'
         ];
     }
 
