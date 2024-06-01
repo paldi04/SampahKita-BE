@@ -5,36 +5,33 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class SampahDiolah extends Model
+class SampahDimanfaatkan extends Model
 {
     public $incrementing = false;
 
     protected $fillable = [
         'id',
-        'tss_id',
+        'tts_id',
         'sampah_kategori_id',
         'berat_kg',
-        'diolah_oleh',
-        'tks_id',
-        'waktu_diolah',
-        'status',
+        'nama_produk',
+        'nilai_jual',
+        'jumlah_produk',
+        'kategori_produk',
+        'foto_produk',
+        'kode_produk',
         'created_by',
         'updated_by',
     ];
 
-    public function tempatSumberSampah()
+    public function tempatTimbulanSmpah()
     {
-        return $this->belongsTo(TempatTimbulanSampah::class, 'tss_id', 'id');
+        return $this->belongsTo(TempatTimbulanSampah::class, 'tts_id', 'id');
     }
 
     public function sampahKategori()
     {
         return $this->belongsTo(SampahKategori::class, 'sampah_kategori_id', 'id');
-    }
-
-    public function tempatKumpulanSampah()
-    {
-        return $this->belongsTo(TempatTimbulanSampah::class, 'tks_id', 'id');
     }
 
     public function createdBy()

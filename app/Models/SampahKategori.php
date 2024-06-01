@@ -14,4 +14,14 @@ class SampahKategori extends Model
     {
         return $this->hasMany(SampahMasuk::class);
     }
+
+    public function sampahDiolahs()
+    {
+        return $this->hasMany(SampahDiolah::class);
+    }
+
+    public function sampahDimanfaatkans()
+    {
+        return $this->hasMany(SampahDimanfaatkan::class);
+    }
 }

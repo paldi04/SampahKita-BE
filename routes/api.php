@@ -50,4 +50,10 @@ Route::prefix('sampah')->group(function () {
         Route::get('/{id}', [SampahController::class, 'getSampahDiolahDetail']);
         Route::put('/{id}', [SampahController::class, 'updateSampahDiolah']);
     });
+    Route::prefix('dimanfaatkan')->group(function () {
+        Route::post('/', [SampahController::class, 'storeSampahDimanfaatkan']);
+        Route::get('/list', [SampahController::class, 'getSampahDimanfaatkanList']);
+        Route::get('/{id}', [SampahController::class, 'getSampahDimanfaatkanDetail']);
+        Route::put('/{id}', [SampahController::class, 'updateSampahDimanfaatkan']);
+    });
 });

@@ -1,23 +1,18 @@
 <?php
 
-namespace App\Http\Requests\SampahDiolah;
+namespace App\Http\Requests\SampahDimanfaatkan;
 
 use App\Models\SampahKategori;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class GetSampahDiolahListRequest extends FormRequest
+class GetSampahDimanfaatkanListRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        if ($this->user()->user_role_id === 'oks') {
-            $this->merge(['tks_id' => $this->user()->tts_id]);
-        }
-        if ($this->user()->user_role_id === 'oss') {
-            $this->merge(['tss_id' => $this->user()->tts_id]);
-        }
-        return $this->user()->user_role_id === 'oss' || $this->user()->user_role_id === 'oks';
+        $this->merge(['tts_id' => $this->user()->tts_id]);
+        return true;
     }
     
     protected function failedAuthorization()
@@ -33,13 +28,10 @@ class GetSampahDiolahListRequest extends FormRequest
     {
         return [
             'tts_id' => 'string',
-            'tks_id' => 'string',
             'sampah_kategori_id' => [
                 'numeric',
                 'exists:' . SampahKategori::class . ',id', // Ensure the ID exists
             ],
-            'dioleh_oleh' => 'string', // Change 'diolah_oleh' to 'dioleh_oleh'
-            'status' => 'string|in:menunggu_respon,sudah_direspon,dibatalkan', // Add 'status' field validation
             'page' => 'numeric|min:1',
             'size' => 'numeric|min:1|max:100',
             'start_date' => 'date_format:Y-m-d',

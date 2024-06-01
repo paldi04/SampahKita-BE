@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\SampahDiolah;
+namespace App\Http\Requests\SampahDimanfaatkan;
 
 use App\Models\SampahKategori;
 use App\Models\TempatTimbulanSampah;
@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreSampahDiolahRequest extends FormRequest
+class StoreSampahDimanfaatkanRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +16,7 @@ class StoreSampahDiolahRequest extends FormRequest
     public function authorize(): bool
     {
         $this->merge([
-            'tss_id' => auth()->user()->tts_id
+            'tts_id' => auth()->user()->tts_id
         ]);
         return auth()->user()->user_role_id === 'oss' && auth()->user()->status === 'terverifikasi';
     }
@@ -31,7 +31,7 @@ class StoreSampahDiolahRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tss_id' => [
+            'tts_id' => [
                 'required',
                 'string',
                 'exists:' . TempatTimbulanSampah::class . ',id', // Ensure the ID exists
@@ -42,10 +42,12 @@ class StoreSampahDiolahRequest extends FormRequest
                 'exists:' . SampahKategori::class . ',id', // Ensure the ID exists
             ],
             'berat_kg' => 'required|numeric',
-            'diolah_oleh' => 'required|string',
-            'tks_id' => $this->input('diolah_oleh') === 'tks' ? 'required|exists:' . TempatTimbulanSampah::class . ',id' : 'nullable',
-            'waktu_diolah' => 'required|date_format:Y-m-d H:i:s'
-
+            'nama_produk' => 'required|string',
+            'nilai_jual' => 'required|numeric',
+            'jumlah_produk' => 'required|numeric',
+            'kategori_produk' => 'required|string',
+            'foto_produk' => 'required|string',
+            'kode_produk' => 'required|string',
         ];
     }
 
@@ -60,10 +62,18 @@ class StoreSampahDiolahRequest extends FormRequest
             'sampah_kategori_id.exists' => 'ID Kategori Sampah tidak ditemukan!',
             'berat_kg.required' => 'Berat Sampah wajib diisi!',
             'berat_kg.numeric' => 'Berat Sampah harus berupa angka!',
-            'diolah_oleh.required' => 'Diolah Oleh wajib diisi!',
-            'diolah_oleh.string' => 'Diolah Oleh harus berupa string!',
-            'tks_id.exists' => 'ID Tempat Kumpulan Sampah tidak ditemukan!',
-            'waktu_diolah.required' => 'Waktu Pengolahan Sampah wajib diisi!',
+            'nama_produk.required' => 'Nama Produk wajib diisi!',
+            'nama_produk.string' => 'Nama Produk harus berupa string!',
+            'nilai_jual.required' => 'Nilai Jual wajib diisi!',
+            'nilai_jual.numeric' => 'Nilai Jual harus berupa angka!',
+            'jumlah_produk.required' => 'Jumlah Produk wajib diisi!',
+            'jumlah_produk.numeric' => 'Jumlah Produk harus berupa angka!',
+            'kategori_produk.required' => 'Kategori Produk wajib diisi!',
+            'kategori_produk.string' => 'Kategori Produk harus berupa string!',
+            'foto_produk.required' => 'Foto Produk wajib diisi!',
+            'foto_produk.string' => 'Foto Produk harus berupa string!',
+            'kode_produk.required' => 'Kode Produk wajib diisi!',
+            'kode_produk.string' => 'Kode Produk harus berupa string!',
         ];
     }
 

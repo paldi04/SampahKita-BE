@@ -60,6 +60,26 @@ class TempatTimbulanSampah extends Model
         return $this->hasMany(User::class, 'tts_id');
     }
 
+    public function sampahMasuks()
+    {
+        return $this->hasMany(SampahMasuk::class, 'tts_id');
+    }
+
+    public function sampahDiolahs()
+    {
+        return $this->hasMany(SampahDiolah::class, 'tss_id');
+    }
+
+    public function sampahDiolahOlehs()
+    {
+        return $this->hasMany(SampahDiolah::class, 'tks_id');
+    }
+
+    public function sampahDimanfaatkan()
+    {
+        return $this->hasMany(SampahDimanfaatkan::class, 'tts_id');
+    }
+
     protected static function boot()
     {
         parent::boot();
