@@ -6,7 +6,7 @@ services:
       context: .
     container_name: sampahkitajabar-be
     restart: unless-stopped
-    working_dir: /var/www
+    working_dir: /app
     env_file:
       - .env
     ports:
