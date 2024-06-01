@@ -53,7 +53,7 @@ class UserSeeder extends Seeder
                 'nomor_telepon' => '080000000000',
                 'email' => 'admin@sampahkitajabar.id',
                 'password' => Hash::make('P4$$word_admin_sampahkita_jabar'),
-                'status' => 'verified',
+                'status' => 'terverifikasi',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]

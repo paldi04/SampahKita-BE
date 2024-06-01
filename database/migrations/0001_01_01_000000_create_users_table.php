@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('status', ['unverified', 'verified', 'rejected'])->default('unverified');
+            $table->enum('status', ['belum_verifikasi', 'terverifikasi', 'ditolak'])->default('belum_verifikasi');
             $table->timestamp('last_active_at')->nullable();
             $table->uuid('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('restrict')->onUpdate('cascade');

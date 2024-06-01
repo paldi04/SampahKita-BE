@@ -48,7 +48,7 @@ class UpdateTempatTimbulanSampahRequest extends FormRequest
             'kepemilikan_lahan' => 'string|max:255',
             'foto_tempat' => 'nullable|array',
             'foto_tempat.*' => 'nullable|string',
-            'status' => 'string|in:active,inactive'
+            'status' => 'string|in:aktif,tidak_aktif'
         ];
     }
 
@@ -69,7 +69,7 @@ class UpdateTempatTimbulanSampahRequest extends FormRequest
             'sisa_lahan' => 'Sisa lahan harus berupa angka!',
             'foto_tempat.array' => 'Foto tempat harus berupa array!',
             'foto_tempat.*.string' => 'Foto tempat harus berupa string!',
-            'status.in' => 'Status harus berupa active atau inactive!'
+            'status.in' => 'Status harus berupa aktif atau tidak_aktif!'
         ];
     }
 

@@ -18,7 +18,7 @@ class StoreSampahMasukRequest extends FormRequest
         $this->merge([
             'tts_id' => auth()->user()->tts_id
         ]);
-        return auth()->user()->user_role_id === 'oss' && auth()->user()->status === 'verified';
+        return auth()->user()->user_role_id === 'oss' && auth()->user()->status === 'terverifikasi';
     }
     protected function failedAuthorization()
     {

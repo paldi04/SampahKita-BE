@@ -85,6 +85,7 @@ class TempatTimbulanSampahController extends ApiController
                 $query->where('status', 'like', '%' . $request->status . '%');
             })
             ->with(['tempatTimbulanSampahKategori:id,nama', 'tempatTimbulanSampahSektor:id,nama'])
+            ->orderBy('updated_at', 'desc')
             ->offset($offset)->limit($size)->get();
 
         $total = TempatTimbulanSampah::when($request->nama_tempat, function ($query) use ($request) {

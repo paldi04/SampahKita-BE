@@ -1,5 +1,5 @@
 git add .
-git commit -m "add storage link route"
+git commit -m "api sampah diolah"
 git push origin development
 git push upstream development
 git push github development

@@ -45,7 +45,7 @@ return new class extends Migration
             $table->decimal('sisa_lahan', 10, 2);
             $table->string('kepemilikan_lahan');
             $table->text('foto_tempat')->nullable();
-            $table->enum('status', ['active', 'inactive'])->default('inactive');
+            $table->enum('status', ['aktif', 'tidak_aktif'])->default('tidak_aktif');
             $table->uuid('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
             $table->uuid('updated_by')->nullable();

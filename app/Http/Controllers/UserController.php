@@ -62,9 +62,8 @@ class UserController extends ApiController
             ->when($request->user_role_id, function ($query) use ($request) {
                 $query->where('user_role_id', '=', $request->user_role_id);
             })
-            ->offset($offset)
-            ->limit($size)
-            ->get();
+            ->orderBy('nama', 'asc')
+            ->offset($offset)->limit($size)->get();
 
         $total = User::where('user_role_id', '!=', 'admin')
             ->when($request->status, function ($query) use ($request) {

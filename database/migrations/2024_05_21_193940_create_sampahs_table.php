@@ -40,11 +40,11 @@ return new class extends Migration
             $table->unsignedBigInteger('sampah_kategori_id')->comment('ID Kategori Sampah');
             $table->foreign('sampah_kategori_id')->references('id')->on('sampah_kategoris')->onDelete('restrict')->onUpdate('cascade');
             $table->decimal('berat_kg', 10, 2);
-            $table->enum('diolah_oleh', ['mandiri', 'pengepul', 'tks']);
+            $table->string('diolah_oleh');
             $table->uuid('tks_id')->nullable()->comment('ID Tempat Kumpulan Sampah jika diolah oleh TKS');
             $table->foreign('tks_id')->references('id')->on('tempat_timbulan_sampahs')->onDelete('restrict')->onUpdate('cascade');
             $table->dateTime('waktu_diolah');
-            $table->enum('status', ['pending', 'onprocess', 'complete', 'canceled'])->default('pending');
+            $table->enum('status', ['menunggu_respon', 'sudah_direspon', 'dibatalkan'])->default('menunggu_respon');
             $table->text('keterangan')->nullable();
             $table->uuid('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');

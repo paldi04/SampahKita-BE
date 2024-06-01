@@ -15,6 +15,7 @@ use App\Http\Requests\SampahMasuk\UpdateSampahMasukRequest;
 use App\Models\SampahDiolah;
 use App\Models\SampahKategori;
 use App\Models\SampahMasuk;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -93,6 +94,7 @@ class SampahController extends ApiController
             ->when($request->end_date, function ($query) use ($request) {
                 $query->where('waktu_masuk', '<=', $request->end_date);
             })
+            ->orderBy('updated_at', 'desc')
             ->offset($offset)->limit($size)->get();
 
         $total = SampahMasuk::where('tts_id', '=', $request->tts_id)
@@ -170,7 +172,7 @@ class SampahController extends ApiController
 
     public function getSampahMasukStatus (GetSampahMasukStatusRequest $request)
     {
-        $sampahMasuk = SampahMasuk::select('tts_id', 'sampah_kategori_id', DB::raw('SUM(berat_kg) as berat_kg'), DB::raw('MAX(updated_at) as latest_updated_at'))
+        $sampahMasuk = SampahMasuk::select('tts_id', 'sampah_kategori_id', DB::raw('SUM(berat_kg) as berat_kg'), DB::raw('MAX(updated_at) as last_updated_at'))
             ->when($request->tts_id, function ($query) use ($request) {
                 $query->where('tts_id', '=', $request->tts_id);
             })
@@ -182,11 +184,25 @@ class SampahController extends ApiController
             ->get();
 
         $sampahMasuk = $sampahMasuk->map(function ($sampah) {
-            $sampah->status = 'pending'; // 'pending', 'onprocess', 'complete', 'canceled'
+            $sampah->last_updated_at = Carbon::parse($sampah->last_updated_at)->format('Y-m-d H:i:s');
+            
+            $sampahDiolah = SampahDiolah::select('tss_id', 'sampah_kategori_id', 'status', 'berat_kg')
+                ->where('tss_id', '=', $sampah->tts_id)
+                ->where('sampah_kategori_id', '=', $sampah->sampah_kategori_id)
+                ->where('status', '!=', 'dibatalkan')
+                ->orderBy('updated_at', 'desc')
+                ->get();
+
+            $sampah->berat_kg -= $sampahDiolah->sum('berat_kg');
+            $sampah->berat_kg = round($sampah->berat_kg, 2);
+            $sampah->status = 'belum_diolah';
             return $sampah;
         });
+        $sampahMasuk = $sampahMasuk->filter(function ($sampah) {
+            return $sampah->berat_kg > 0;
+        });
         $result = [
-            'total_berat_kg' => $sampahMasuk->sum('berat_kg'),
+            'total_berat_kg' => round($sampahMasuk->sum('berat_kg'), 2),
             'list' => $sampahMasuk,
         ];
         
@@ -202,7 +218,12 @@ class SampahController extends ApiController
             $sampahDiolah->sampah_kategori_id = $request->sampah_kategori_id;
             $sampahDiolah->berat_kg = $request->berat_kg;
             $sampahDiolah->diolah_oleh = $request->diolah_oleh;
-            $sampahDiolah->tks_id = $request->tks_id;
+            if ($request->diolah_oleh === 'tks') {
+                $sampahDiolah->tks_id = $request->tks_id;
+                $sampahDiolah->status = 'menunggu_respon';
+            } else {
+                $sampahDiolah->status = 'sudah_direspon';
+            }
             $sampahDiolah->waktu_diolah = $request->waktu_diolah;
             $result = $sampahDiolah->save();
             if (!$result) {
@@ -238,6 +259,7 @@ class SampahController extends ApiController
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', '=', $request->status);
             })
+            ->orderBy('updated_at', 'desc')
             ->offset($offset)->limit($size)->get();
 
         $total = SampahDiolah::where('tss_id', '=', $request->tss_id)
@@ -304,4 +326,31 @@ class SampahController extends ApiController
         DB::commit();
         return $this->sendResponse($sampahDiolah);
     }
+
+    public function getSampahDiolahStatus (GetSampahMasukStatusRequest $request)
+    {
+        $sampahDiolah = SampahDiolah::select('tss_id', 'sampah_kategori_id', DB::raw('SUM(berat_kg) as berat_kg'), DB::raw('MAX(updated_at) as last_updated_at'))
+            ->when($request->tss_id, function ($query) use ($request) {
+                $query->where('tss_id', '=', $request->tss_id);
+            })
+            ->when($request->sampah_kategori_id, function ($query) use ($request) {
+                $query->where('sampah_kategori_id', '=', $request->sampah_kategori_id);
+            })
+            ->groupBy('tss_id', 'sampah_kategori_id')
+            ->with('tempatSumberSampah:id,nama_tempat', 'sampahKategori:id,nama')
+            ->get();
+
+        $sampahDiolah = $sampahDiolah->map(function ($sampah) {
+            $sampah->last_updated_at = Carbon::parse($sampah->last_updated_at)->format('Y-m-d H:i:s');
+            $sampah->status = 'sudah_diolah';
+            return $sampah;
+        });
+        $result = [
+            'total_berat_kg' => round($sampahDiolah->sum('berat_kg'), 2),
+            'list' => $sampahDiolah,
+        ];
+        
+        return $this->sendResponse($result);
+    }
+
 }

@@ -17,7 +17,7 @@ class UpdateSampahDiolahRequest extends FormRequest
         if (auth()->user()->user_role_id === 'admin') {
             return true;
         }
-        if (auth()->user()->user_role_id === 'oss' && auth()->user()->status === 'verified') {
+        if (auth()->user()->user_role_id === 'oss' && auth()->user()->status === 'terverifikasi') {
             $this->merge(['tss_id' => auth()->user()->tts_id]);
             return true;
         }
@@ -36,7 +36,7 @@ class UpdateSampahDiolahRequest extends FormRequest
         return [
             'id' => 'required|string', // Add 'id' field validation
             'tss_id' => 'nullable|string',
-            'status' => 'string|in:pending,onprocess,complete,canceled', // Add 'status' field validation
+            'status' => 'string|in:menunggu_respon,sudah_direspon,dibatalkan', // Add 'status' field validation
             'keterangan' => 'string',
         ];
     }

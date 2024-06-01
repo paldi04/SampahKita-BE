@@ -33,7 +33,7 @@ class UpdateUserRequest extends FormRequest
             'nama' => 'string|max:255',
             'nomor_telepon' => 'string|regex:/^[0-9]{7,15}$/|starts_with:08',
             'email' => 'email',
-            'status' => 'in:verified,unverified,rejected',
+            'status' => 'in:terverifikasi,belum_terverifikasi,ditolak',
         ];
     }
 

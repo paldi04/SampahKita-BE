@@ -45,6 +45,7 @@ Route::prefix('sampah')->group(function () {
     });
     Route::prefix('diolah')->group(function () {
         Route::post('/', [SampahController::class, 'storeSampahDiolah']);
+        Route::get('/status', [SampahController::class, 'getSampahDiolahStatus']);
         Route::get('/list', [SampahController::class, 'getSampahDiolahList']);
         Route::get('/{id}', [SampahController::class, 'getSampahDiolahDetail']);
         Route::put('/{id}', [SampahController::class, 'updateSampahDiolah']);

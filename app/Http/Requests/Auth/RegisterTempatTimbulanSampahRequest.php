@@ -48,7 +48,7 @@ class RegisterTempatTimbulanSampahRequest extends FormRequest
             'tempat_timbulan_sampah.kepemilikan_lahan' => 'required|string|max:255',
             'tempat_timbulan_sampah.foto_tempat' => 'nullable|array',
             'tempat_timbulan_sampah.foto_tempat.*' => 'nullable|string',
-            'tempat_timbulan_sampah.status' => 'required|string|in:active,inactive'
+            'tempat_timbulan_sampah.status' => 'required|string|in:aktif,tidak_aktif'
         ];
     }
 
@@ -68,7 +68,7 @@ class RegisterTempatTimbulanSampahRequest extends FormRequest
             'tempat_timbulan_sampah.lebar.numeric' => 'Lebar harus berupa angka!',
             'tempat_timbulan_sampah.sisa_lahan.numeric' => 'Sisa lahan harus berupa angka!',
             'tempat_timbulan_sampah.foto_tempat.array' => 'Foto tempat harus berupa array!',
-            'tempat_timbulan_sampah.status.in' => 'Status harus berupa active atau inactive!'
+            'tempat_timbulan_sampah.status.in' => 'Status harus berupa aktif atau tidak_aktif!'
         ];
     }
 

@@ -39,7 +39,7 @@ class GetSampahDiolahListRequest extends FormRequest
                 'exists:' . SampahKategori::class . ',id', // Ensure the ID exists
             ],
             'dioleh_oleh' => 'string|in:mandiri,pengepul,tks', // Change 'diolah_oleh' to 'dioleh_oleh'
-            'status' => 'string|in:pending,onprocess,complete,canceled', // Add 'status' field validation
+            'status' => 'string|in:menunggu_respon,sudah_direspon,dibatalkan', // Add 'status' field validation
             'page' => 'numeric|min:1',
             'size' => 'numeric|min:1|max:100',
             'start_date' => 'date_format:Y-m-d',

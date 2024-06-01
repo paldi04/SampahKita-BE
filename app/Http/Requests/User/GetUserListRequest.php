@@ -30,7 +30,7 @@ class GetUserListRequest extends FormRequest
             'page' => 'numeric|min:1',
             'size' => 'numeric|min:1|max:100',
             'user_role_id' => 'string|exists:user_roles,id',
-            'status' => 'string|in:verified,unverified',
+            'status' => 'string|in:terverifikasi,belum_terverifikasi',
         ];
     }
 

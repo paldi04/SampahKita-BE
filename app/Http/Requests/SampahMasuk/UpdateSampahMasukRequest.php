@@ -18,7 +18,7 @@ class UpdateSampahMasukRequest extends FormRequest
         if (auth()->user()->user_role_id === 'admin') {
             return true;
         }
-        if (auth()->user()->user_role_id === 'oss' && auth()->user()->status === 'verified') {
+        if (auth()->user()->user_role_id === 'oss' && auth()->user()->status === 'terverifikasi') {
             $this->merge(['tts_id' => auth()->user()->tts_id]);
             return true;
         }
