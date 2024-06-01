@@ -113,7 +113,7 @@ class UserController extends ApiController
             'userRole:id,nama',
             'createdBy:id,nama',
             'updatedBy:id,nama',
-            'tempatTimbulanSampah:id,nama_tempat,tts_kategori_id,tts_sektor_id,alamat_tempat,latitude,longitude,luas_lahan,luas_bangunan,panjang,lebar,sisa_lahan,kepemilikan_lahan,foto_tempat,status',
+            'tempatTimbulanSampah:id,nama_tempat,tts_kategori_id,tts_sektor_id,alamat_provinsi,alamat_kota,alamat_rw,alamat_rt,alamat_lengkap,alamat_latitude,alamat_longitude,luas_lahan,luas_bangunan,panjang,lebar,sisa_lahan,kepemilikan_lahan,foto_tempat,status',
             'tempatTimbulanSampah.tempatTimbulanSampahKategori:id,nama',
             'tempatTimbulanSampah.tempatTimbulanSampahSektor:id,nama'
         ];

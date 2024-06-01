@@ -68,7 +68,7 @@ class TempatTimbulanSampahController extends ApiController
         $size = $request->input('size', 10);
         $offset = ($page - 1) * $size;
 
-        $users = TempatTimbulanSampah::select('id', 'nama_tempat', 'tts_kategori_id', 'tts_sektor_id', 'alamat_tempat', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at')
+        $users = TempatTimbulanSampah::select('id', 'nama_tempat', 'tts_kategori_id', 'tts_sektor_id', 'alamat_lengkap', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at')
             ->when($request->nama_tempat, function ($query) use ($request) {
                 $query->where('nama_tempat', 'like', '%' . $request->nama_tempat . '%');
             })
@@ -78,8 +78,8 @@ class TempatTimbulanSampahController extends ApiController
             ->when($request->tts_sektor_id, function ($query) use ($request) {
                 $query->where('tts_sektor_id', '=', $request->tts_sektor_id);
             })
-            ->when($request->alamat_tempat, function ($query) use ($request) {
-                $query->where('alamat_tempat', 'like', '%' . $request->alamat_tempat . '%');
+            ->when($request->alamat_lengkap, function ($query) use ($request) {
+                $query->where('alamat_lengkap', 'like', '%' . $request->alamat_lengkap . '%');
             })
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', 'like', '%' . $request->status . '%');
@@ -96,8 +96,8 @@ class TempatTimbulanSampahController extends ApiController
             ->when($request->tts_sektor_id, function ($query) use ($request) {
                 $query->where('tts_sektor_id', '=', $request->tts_sektor_id);
             })
-            ->when($request->alamat_tempat, function ($query) use ($request) {
-                $query->where('alamat_tempat', 'like', '%' . $request->alamat_tempat . '%');
+            ->when($request->alamat_lengkap, function ($query) use ($request) {
+                $query->where('alamat_lengkap', 'like', '%' . $request->alamat_lengkap . '%');
             })
             ->when($request->status, function ($query) use ($request) {
                 $query->where('status', 'like', '%' . $request->status . '%');
@@ -143,10 +143,14 @@ class TempatTimbulanSampahController extends ApiController
         try {
 
             $tempatTimbulanSampah->nama_tempat = $request->nama_tempat ?? $tempatTimbulanSampah->nama_tempat;
-            $tempatTimbulanSampah->alamat_tempat = $request->alamat_tempat ?? $tempatTimbulanSampah->alamat_tempat;
             $tempatTimbulanSampah->afiliasi = $request->afiliasi ?? $tempatTimbulanSampah->afiliasi;
-            $tempatTimbulanSampah->latitude = $request->latitude ?? $tempatTimbulanSampah->latitude;
-            $tempatTimbulanSampah->longitude = $request->longitude ?? $tempatTimbulanSampah->longitude;
+            $tempatTimbulanSampah->alamat_provinsi = $request->alamat_provinsi ?? $tempatTimbulanSampah->alamat_provinsi;
+            $tempatTimbulanSampah->alamat_kota = $request->alamat_kota ?? $tempatTimbulanSampah->alamat_kota;
+            $tempatTimbulanSampah->alamat_rw = $request->alamat_rw ?? $tempatTimbulanSampah->alamat_rw;
+            $tempatTimbulanSampah->alamat_rt = $request->alamat_rt ?? $tempatTimbulanSampah->alamat_rt;
+            $tempatTimbulanSampah->alamat_lengkap = $request->alamat_lengkap ?? $tempatTimbulanSampah->alamat_lengkap;
+            $tempatTimbulanSampah->alamat_latitude = $request->alamat_latitude ?? $tempatTimbulanSampah->alamat_latitude;
+            $tempatTimbulanSampah->alamat_longitude = $request->alamat_longitude ?? $tempatTimbulanSampah->alamat_longitude;
             $tempatTimbulanSampah->luas_lahan = $request->luas_lahan ?? $tempatTimbulanSampah->luas_lahan;
             $tempatTimbulanSampah->luas_bangunan = $request->luas_bangunan ?? $tempatTimbulanSampah->luas_bangunan;
             $tempatTimbulanSampah->panjang = $request->panjang ?? $tempatTimbulanSampah->panjang;

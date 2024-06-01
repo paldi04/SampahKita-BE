@@ -30,10 +30,14 @@ return new class extends Migration
             $table->foreign('tts_kategori_id')->references('id')->on('tempat_timbulan_sampah_kategoris')->onDelete('restrict')->onUpdate('cascade');
             $table->unsignedBigInteger('tts_sektor_id')->nullable()->comment('ID Sektor Tempat Timbulan Sampah');
             $table->foreign('tts_sektor_id')->references('id')->on('tempat_timbulan_sampah_sektors')->onDelete('restrict')->onUpdate('cascade');
-            $table->string('alamat_tempat');
             $table->string('afiliasi')->nullable();
-            $table->string('latitude');
-            $table->string('longitude');
+            $table->string('alamat_provinsi');
+            $table->string('alamat_kota');
+            $table->string('alamat_rw');
+            $table->string('alamat_rt');
+            $table->string('alamat_lengkap');
+            $table->string('alamat_latitude');
+            $table->string('alamat_longitude');
             $table->decimal('luas_lahan', 10, 2);
             $table->decimal('luas_bangunan', 10, 2);
             $table->decimal('panjang', 10, 2);

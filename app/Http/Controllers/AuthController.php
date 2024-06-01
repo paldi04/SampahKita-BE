@@ -45,10 +45,14 @@ class AuthController extends ApiController
             $tempatTimbulanSampah->nama_tempat = $request->tempat_timbulan_sampah['nama_tempat'];
             $tempatTimbulanSampah->tts_kategori_id = $request->tempat_timbulan_sampah['tts_kategori_id'];
             $tempatTimbulanSampah->tts_sektor_id = $request->tempat_timbulan_sampah['tts_sektor_id'];
-            $tempatTimbulanSampah->alamat_tempat = $request->tempat_timbulan_sampah['alamat_tempat'];
             $tempatTimbulanSampah->afiliasi = $request->tempat_timbulan_sampah['afiliasi'];
-            $tempatTimbulanSampah->latitude = $request->tempat_timbulan_sampah['latitude'];
-            $tempatTimbulanSampah->longitude = $request->tempat_timbulan_sampah['longitude'];
+            $tempatTimbulanSampah->alamat_provinsi = $request->tempat_timbulan_sampah['alamat_provinsi'];
+            $tempatTimbulanSampah->alamat_kota = $request->tempat_timbulan_sampah['alamat_kota'];
+            $tempatTimbulanSampah->alamat_rw = $request->tempat_timbulan_sampah['alamat_rw'];
+            $tempatTimbulanSampah->alamat_rt = $request->tempat_timbulan_sampah['alamat_rt'];
+            $tempatTimbulanSampah->alamat_lengkap = $request->tempat_timbulan_sampah['alamat_lengkap'];
+            $tempatTimbulanSampah->alamat_latitude = $request->tempat_timbulan_sampah['alamat_latitude'];
+            $tempatTimbulanSampah->alamat_longitude = $request->tempat_timbulan_sampah['alamat_longitude'];
             $tempatTimbulanSampah->luas_lahan = $request->tempat_timbulan_sampah['luas_lahan'];
             $tempatTimbulanSampah->luas_bangunan = $request->tempat_timbulan_sampah['luas_bangunan'];
             $tempatTimbulanSampah->panjang = $request->tempat_timbulan_sampah['panjang'];

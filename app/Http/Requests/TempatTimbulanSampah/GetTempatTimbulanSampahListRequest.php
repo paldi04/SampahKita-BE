@@ -31,7 +31,7 @@ class getTempatTimbulanSampahListRequest extends FormRequest
             'tts_kategori_id' => 'exists:tempat_timbulan_sampah_kategoris,id',
             'tts_Sektor_id' => 'exists:tempat_timbulan_sampah_kategoris,id',
             'nama_tempat' => 'string',
-            'alamat_tempat' => 'string',
+            'alamat_lengkap' => 'string',
             'status' => 'string',
             'page' => 'numeric|min:1',
             'size' => 'numeric|min:1|max:100',
