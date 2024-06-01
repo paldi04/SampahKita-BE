@@ -15,7 +15,7 @@ services:
       - sampahkitajabar
 
   mysql:
-    image: mysql
+    image: mysql:8.0
     container_name: sampahkitajabar-mysql
     restart: unless-stopped
     environment:
