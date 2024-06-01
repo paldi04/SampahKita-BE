@@ -1,4 +1,6 @@
 git add .
-git commit -m "api get sampah masuk detail & update sampah masuk data"
+git commit -m "add storage link route"
 git push origin development
+git push upstream development
+git push github development
 
