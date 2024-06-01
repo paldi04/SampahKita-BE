@@ -71,7 +71,7 @@
 1. For API Documentation you can import this postman collection
 
     ```
-    https://api.postman.com/collections/629881-b87e2db7-b4dd-4cab-8a5b-73c980901db0?access_key=<ask developer>
+    https://api.postman.com/collections/629881-b87e2db7-b4dd-4cab-8a5b-73c980901db0
     ```
 
 ## Contributing
