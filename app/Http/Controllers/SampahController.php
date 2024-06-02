@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SampahDimanfaatkan\GetDistribusiSampahDimanfaatkanListRequest;
 use App\Http\Requests\SampahDimanfaatkan\GetSampahDimanfaatkanDetailRequest;
 use App\Http\Requests\SampahDimanfaatkan\GetSampahDimanfaatkanListRequest;
+use App\Http\Requests\SampahDimanfaatkan\StoreDistribusiSampahDimanfaatkanRequest;
 use App\Http\Requests\SampahDimanfaatkan\StoreSampahDimanfaatkanRequest;
 use App\Http\Requests\SampahDimanfaatkan\UpdateSampahDimanfaatkanRequest;
 use App\Http\Requests\SampahDiolah\StoreSampahDiolahRequest;
@@ -16,6 +18,7 @@ use App\Http\Requests\SampahMasuk\GetSampahMasukListRequest;
 use App\Http\Requests\SampahMasuk\GetSampahMasukStatusRequest;
 use App\Http\Requests\SampahMasuk\StoreSampahMasukRequest;
 use App\Http\Requests\SampahMasuk\UpdateSampahMasukRequest;
+use App\Models\DistribusiSampahDimanfaatkan;
 use App\Models\SampahDimanfaatkan;
 use App\Models\SampahDiolah;
 use App\Models\SampahKategori;
@@ -482,4 +485,51 @@ class SampahController extends ApiController
         return $this->sendResponse($sampahDimanfaatkan);
     }
 
+    public function storeDistribusiSampahDimanfaatkan (StoreDistribusiSampahDimanfaatkanRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $distribusiSampahDimanfaatkan = new DistribusiSampahDimanfaatkan();
+            $distribusiSampahDimanfaatkan->sampah_dimanfaatkan_id = $request->sampah_dimanfaatkan_id;
+            $distribusiSampahDimanfaatkan->jumlah_produk = $request->jumlah_produk;
+            $distribusiSampahDimanfaatkan->tts_distribusi_id = $request->tts_distribusi_id;
+            $distribusiSampahDimanfaatkan->alamat_distribusi = $request->alamat_distribusi;
+            $distribusiSampahDimanfaatkan->link_online_distribusi = $request->link_online_distribusi;
+            $result = $distribusiSampahDimanfaatkan->save();
+            if (!$result) {
+                DB::rollBack();
+                return $this->sendError('Distribusi sampah dimanfaatkan gagal, silahkan coba beberapa lagi!');
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError('Failed to distribute sampah dimanfaatkan', ["error" => $e->getMessage()]);
+        }
+        DB::commit();
+        return $this->sendResponse($distribusiSampahDimanfaatkan);
+    }
+
+    public function getDistribusiSampahDimanfaatkanList (GetDistribusiSampahDimanfaatkanListRequest $request)
+    {
+        $page = $request->input('page', 1);
+        $size = $request->input('size', 10);
+        $offset = ($page - 1) * $size;
+
+        $list = DistribusiSampahDimanfaatkan::select('id', 'sampah_dimanfaatkan_id', 'jumlah_produk', 'tts_distribusi_id', 'alamat_distribusi', 'link_online_distribusi')
+            ->with('sampahDimanfaatkan:id,nama_produk', 'tempatTimbulanSampah:id,nama_tempat')
+            ->where('sampah_dimanfaatkan_id', '=', $request->sampah_dimanfaatkan_id)
+            ->orderBy('updated_at', 'desc')
+            ->offset($offset)->limit($size)->get();
+
+        $total = DistribusiSampahDimanfaatkan::where('sampah_dimanfaatkan_id', '=', $request->sampah_dimanfaatkan_id)
+            ->count();
+
+        $result = [
+            'list' => $list,
+            'metadata' => [
+                'total_data' => $total,
+                'total_page' => ceil($total / $size),
+            ],
+        ];
+        return $this->sendResponse($result);
+    }
 }

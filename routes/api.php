@@ -55,5 +55,7 @@ Route::prefix('sampah')->group(function () {
         Route::get('/list', [SampahController::class, 'getSampahDimanfaatkanList']);
         Route::get('/{id}', [SampahController::class, 'getSampahDimanfaatkanDetail']);
         Route::put('/{id}', [SampahController::class, 'updateSampahDimanfaatkan']);
+        Route::post('/{id}/distribusi', [SampahController::class, 'storeDistribusiSampahDimanfaatkan']);
+        Route::get('/{id}/distribusi/list', [SampahController::class, 'getDistribusiSampahDimanfaatkanList']);
     });
 });
