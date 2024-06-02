@@ -34,7 +34,7 @@ COPY . /app
 COPY --chown=www-data:www-data . /app
 
 # Install dependencies
-RUN composer install --no-scripts --no-autoloader
+RUN composer install --no-scripts
 
 # Expose port 8081 and start PHP-FPM server
 EXPOSE 8081
