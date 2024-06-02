@@ -38,4 +38,6 @@ RUN composer install --no-scripts
 
 # Expose port 8081 and start PHP-FPM server
 EXPOSE 8081
-CMD ["php-fpm"]
+
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8081"]
+
