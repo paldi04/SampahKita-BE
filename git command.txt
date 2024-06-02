@@ -1,5 +1,5 @@
 git add .
-git commit -m "change docker compose"
+git commit -m "change docker compose & docker file"
 git push origin development
 git push upstream development
 git push github development
