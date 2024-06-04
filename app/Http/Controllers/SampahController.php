@@ -26,6 +26,8 @@ use App\Models\SampahMasuk;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Ballen\Distical\Calculator as DistanceCalculator;
+use Ballen\Distical\Entities\LatLong;
 
 class SampahController extends ApiController
 {
@@ -300,7 +302,7 @@ class SampahController extends ApiController
 
     public function getSampahDiolahDetail (GetSampahDiolahDetailRequest $request)
     {
-        $sampahDiolah = SampahDiolah::with('tempatSumberSampah:id,nama_tempat', 'sampahKategori:id,nama', 'tempatKumpulanSampah:id,nama_tempat', 'createdBy:id,nama', 'updatedBy:id,nama')
+        $sampahDiolah = SampahDiolah::with('tempatSumberSampah:id,nama_tempat,alamat_latitude,alamat_longitude', 'sampahKategori:id,nama', 'tempatKumpulanSampah:id,nama_tempat,alamat_latitude,alamat_longitude', 'createdBy:id,nama', 'updatedBy:id,nama')
             ->where('id', '=', $request->id)
             ->when($request->tss_id, function ($query) use ($request) {
                 $query->where('tss_id', '=', $request->tss_id);
@@ -312,6 +314,17 @@ class SampahController extends ApiController
         if (!$sampahDiolah) {
             return $this->sendError('Sampah diolah tidak ditemukan!', [], 404);
         }
+
+        try {
+            $firstLocation = new LatLong($sampahDiolah->tempatSumberSampah->alamat_latitude, $sampahDiolah->tempatSumberSampah->alamat_longitude);
+            $secondLocation = new LatLong($sampahDiolah->tempatKumpulanSampah->alamat_latitude, $sampahDiolah->tempatKumpulanSampah->alamat_longitude);
+            $distanceCalculator = new DistanceCalculator($firstLocation, $secondLocation);
+            $distance = $distanceCalculator->get();
+            $sampahDiolah->jarak_tempuh = round($distance->asKilometres(), 1).'km';
+        } catch (\Exception $e) {
+            $sampahDiolah->jarak_tempuh = $e->getMessage();
+        }
+
         return $this->sendResponse($sampahDiolah);
     }
 
