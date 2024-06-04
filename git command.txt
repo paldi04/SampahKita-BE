@@ -1,5 +1,5 @@
 git add .
-git commit -m "remove file model"
+git commit -m "add file model"
 git push origin development
 git push upstream development
 git push github development
