@@ -88,6 +88,5 @@ class TempatTimbulanSampah extends Model
             $model->updated_by = auth()->id();
         });
     }
-
     
 }
