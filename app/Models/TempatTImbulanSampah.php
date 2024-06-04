@@ -89,4 +89,5 @@ class TempatTimbulanSampah extends Model
         });
     }
 
+    
 }
