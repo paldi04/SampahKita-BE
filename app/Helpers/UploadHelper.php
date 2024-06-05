@@ -3,9 +3,8 @@
 use Illuminate\Http\File;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
+use Google\Cloud\Storage\StorageClient;
 
 function uploadBase64Image($base64Image, $uploadPath)
 {
@@ -93,4 +92,35 @@ function storeFile(File $tmpFileObject, $uploadPath = 'uploadPath')
     unlink($tmpFileObjectPathName); // delete temp file
 
     return $uploadPath . '/' . basename($storedFile);
+}
+
+function uploadBase64ImageToGoogleCloudStorage($base64Image, $uploadPath)
+{
+    $dataUriScheme = explode(',', $base64Image)[0];
+    if (!in_array($dataUriScheme, ['data:image/png;base64', 'data:image/jpg;base64', 'data:image/jpeg;base64'])) {
+        throw new Exception('Invalid image format.');
+    }
+
+    $fileExtension = explode('/', explode(';', $dataUriScheme)[0])[1];
+    if (!in_array($fileExtension, ['png', 'jpg', 'jpeg'])) {
+        throw new Exception('Invalid image format.');
+    }
+    
+    $bucketName = env('GOOGLE_CLOUD_STORAGE_BUCKET');
+    $objectName = time() . '.' . $fileExtension;
+    try {
+        $storage = new StorageClient([
+            'keyFilePath' => base_path(env('GOOGLE_APPLICATION_CREDENTIALS')),
+        ]);  
+        $storage->bucket($bucketName)->upload($base64Image, [
+            'name' => $uploadPath . '/' . $objectName
+        ]);
+    
+        $object = $storage->bucket($bucketName)->object($objectName);
+        $publicUrl = 'https://' . $bucketName . '.storage.googleapis.com/' . $uploadPath . '/' . $object->name();
+    
+        return ['success' => true, 'url' => $publicUrl];
+    } catch (Exception $e) {
+        return ['success' => false, 'error' => $e->getMessage()];
+    }
 }

@@ -64,8 +64,8 @@ class SampahController extends ApiController
             $sampahMasuk->sampah_kategori_id = $request->sampah_kategori_id;
 
             $uploadPath = 'tempat-timbunan-sampah/' . $sampahMasuk->tts_id . '/foto-sampah-masuk';
-            $uploadResult = uploadBase64Image($request->foto_sampah, $uploadPath) ;
-            if (!$uploadResult['url']) {
+            $uploadResult = uploadBase64ImageToGoogleCloudStorage($request->foto_sampah, $uploadPath) ;
+            if (!$uploadResult['success']) {
                 DB::rollBack();
                 return $this->sendError($uploadResult['error']);
             }
@@ -75,7 +75,7 @@ class SampahController extends ApiController
             $sampahMasuk->berat_kg = $request->berat_kg;
             $result = $sampahMasuk->save();
             if (!$result) {
-                Storage::delete($sampahMasuk->foto_sampah);
+                // Storage::delete($sampahMasuk->foto_sampah);
                 DB::rollBack();
                 return $this->sendError('Tambah data sampah masuk gagal, silahkan coba beberapa lagi!');
             }
