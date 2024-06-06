@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Ballen\Distical\Calculator as DistanceCalculator;
 use Ballen\Distical\Entities\LatLong;
+use App\Helpers\CloudStorage as CloudStorage;
 
 class SampahController extends ApiController
 {
@@ -63,8 +64,8 @@ class SampahController extends ApiController
             $sampahMasuk->tts_id = $request->tts_id;
             $sampahMasuk->sampah_kategori_id = $request->sampah_kategori_id;
 
-            $uploadPath = 'tempat-timbunan-sampah/' . $sampahMasuk->tts_id . '/foto-sampah-masuk';
-            $uploadResult = uploadBase64ImageToGoogleCloudStorage($request->foto_sampah, $uploadPath) ;
+            $uploadPath = 'tts/' . $sampahMasuk->tts_id . '/foto-sampah-masuk';
+            $uploadResult = CloudStorage::uploadBase64Image($request->foto_sampah, $uploadPath) ;
             if (!$uploadResult['success']) {
                 DB::rollBack();
                 return $this->sendError($uploadResult['error']);
@@ -75,7 +76,7 @@ class SampahController extends ApiController
             $sampahMasuk->berat_kg = $request->berat_kg;
             $result = $sampahMasuk->save();
             if (!$result) {
-                // Storage::delete($sampahMasuk->foto_sampah);
+                CloudStorage::delete($sampahMasuk->foto_sampah);
                 DB::rollBack();
                 return $this->sendError('Tambah data sampah masuk gagal, silahkan coba beberapa lagi!');
             }
@@ -154,8 +155,8 @@ class SampahController extends ApiController
             $sampahMasuk->sampah_kategori_id = $request->sampah_kategori_id ?? $sampahMasuk->sampah_kategori_id;
             if ($request->foto_sampah) {
                 $old_foto_sampah = $sampahMasuk->foto_sampah;
-                $uploadPath = 'tempat-timbunan-sampah/' . $sampahMasuk->tts_id . '/foto-sampah-masuk';
-                $uploadResult = uploadBase64Image($request->foto_sampah, $uploadPath) ;
+                $uploadPath = 'tts/' . $sampahMasuk->tts_id . '/foto-sampah-masuk';
+                $uploadResult = CloudStorage::uploadBase64Image($request->foto_sampah, $uploadPath) ;
                 if (!$uploadResult['url']) {
                     DB::rollBack();
                     return $this->sendError($uploadResult['error']);
@@ -167,12 +168,12 @@ class SampahController extends ApiController
             $sampahMasuk->berat_kg = $request->berat_kg;
             $result = $sampahMasuk->save();
             if (!$result) {
-                Storage::delete($sampahMasuk->foto_sampah);
+                CloudStorage::delete($sampahMasuk->foto_sampah);
                 DB::rollBack();
                 return $this->sendError('Update data sampah masuk gagal, silahkan coba beberapa lagi!');
             }
             if ($request->foto_sampah && $old_foto_sampah) {
-                Storage::delete($old_foto_sampah);
+                CloudStorage::delete($old_foto_sampah);
             }
         } catch (\Exception $e) {
             DB::rollBack();
@@ -210,6 +211,7 @@ class SampahController extends ApiController
                 $sampah->status = 'sudah_diolah';
                 $sampah->sampah_diolah_id = $sampahDiolah->first()->id;
             } else {
+                $sampah->sampah_diolah_id = $sampah->id;
                 $sampah->status = 'belum_diolah';
             }
             return $sampah;
@@ -389,8 +391,8 @@ class SampahController extends ApiController
             $sampahDimanfaatkan->jumlah_produk = $request->jumlah_produk;
             $sampahDimanfaatkan->kategori_produk = $request->kategori_produk;
 
-            $uploadPath = 'tempat-timbunan-sampah/' . $sampahDimanfaatkan->tts_id . '/foto-produk';
-            $uploadResult = uploadBase64Image($request->foto_produk, $uploadPath) ;
+            $uploadPath = 'tts/' . $sampahDimanfaatkan->tts_id . '/foto-produk';
+            $uploadResult = CloudStorage::uploadBase64Image($request->foto_produk, $uploadPath) ;
             if (!$uploadResult['url']) {
                 DB::rollBack();
                 return $this->sendError($uploadResult['error']);
@@ -400,7 +402,7 @@ class SampahController extends ApiController
             $sampahDimanfaatkan->kode_produk = $request->kode_produk;
             $result = $sampahDimanfaatkan->save();
             if (!$result) {
-                Storage::delete($sampahDimanfaatkan->foto_sampah);
+                CloudStorage::delete($sampahDimanfaatkan->foto_sampah);
                 DB::rollBack();
                 return $this->sendError('Tambah data sampah dimanfaatkan gagal, silahkan coba beberapa lagi!');
             }
@@ -473,8 +475,8 @@ class SampahController extends ApiController
             $sampahDimanfaatkan->kategori_produk = $request->kategori_produk ?? $sampahDimanfaatkan->kategori_produk;
             if ($request->foto_produk) {
                 $old_foto_produk = $sampahDimanfaatkan->foto_produk;
-                $uploadPath = 'tempat-timbunan-sampah/' . $sampahDimanfaatkan->tts_id . '/foto-produk';
-                $uploadResult = uploadBase64Image($request->foto_produk, $uploadPath) ;
+                $uploadPath = 'tts/' . $sampahDimanfaatkan->tts_id . '/foto-produk';
+                $uploadResult = CloudStorage::uploadBase64Image($request->foto_produk, $uploadPath) ;
                 if (!$uploadResult['url']) {
                     DB::rollBack();
                     return $this->sendError($uploadResult['error']);
@@ -484,12 +486,12 @@ class SampahController extends ApiController
             $sampahDimanfaatkan->kode_produk = $request->kode_produk ?? $sampahDimanfaatkan->kode_produk;
             $result = $sampahDimanfaatkan->save();
             if (!$result) {
-                Storage::delete($sampahDimanfaatkan->foto_sampah);
+                CloudStorage::delete($sampahDimanfaatkan->foto_sampah);
                 DB::rollBack();
                 return $this->sendError('Update data sampah dimanfaatkan gagal, silahkan coba beberapa lagi!');
             }
             if ($request->foto_produk && $old_foto_produk) {
-                Storage::delete($old_foto_produk);
+                CloudStorage::delete($old_foto_produk);
             }
         } catch (\Exception $e) {
             DB::rollBack();

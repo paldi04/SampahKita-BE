@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CloudStorage;
 use App\Http\Requests\TempatTimbulanSampah\GetTempatTimbulanSampahDetailRequest;
 use App\Http\Requests\TempatTimbulanSampah\GetTempatTimbulanSampahKategoriListRequest;
 use App\Http\Requests\TempatTimbulanSampah\GetTempatTimbulanSampahSektorListRequest;
@@ -165,10 +166,10 @@ class TempatTimbulanSampahController extends ApiController
                 $old_foto_tempat = $tempatTimbulanSampah->foto_tempat;
                 $foto_tempat = [];
                 for ($i = 0; $i < count($request->foto_tempat); $i++) {
-                    $uploadPath = 'tempat-timbunan-sampah/' . $tempatTimbulanSampah->id . '/foto-tempat';
-                    $uploadResult = uploadBase64Image($request->foto_tempat[$i], $uploadPath) ;
+                    $uploadPath = 'tts/' . $tempatTimbulanSampah->id . '/foto-tempat';
+                    $uploadResult = CloudStorage::uploadBase64Image($request->foto_tempat[$i], $uploadPath) ;
                     if (!$uploadResult['url']) {
-                        Storage::delete($foto_tempat);
+                        CloudStorage::delete($foto_tempat);
                         DB::rollBack();
                         return $this->sendError($uploadResult['error']);
                     }
@@ -183,7 +184,7 @@ class TempatTimbulanSampahController extends ApiController
                 return $this->sendError('Update Tempat Timbulan Sampah gagal, silahkan coba kembali beberapa saat lagi!');
             }
             if ($request->foto_tempat && $old_foto_tempat) {
-                Storage::delete($old_foto_tempat);
+                CloudStorage::delete($old_foto_tempat);
             }
         } catch (\Exception $e) {
             DB::rollBack();

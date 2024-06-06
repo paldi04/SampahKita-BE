@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CloudStorage;
 use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterTempatTimbulanSampahRequest;
@@ -9,7 +10,6 @@ use App\Models\TempatTimbulanSampah;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class AuthController extends ApiController
@@ -62,10 +62,10 @@ class AuthController extends ApiController
             $tempatTimbulanSampah->status = $request->tempat_timbulan_sampah['status'];
             $foto_tempat = [];
             for ($i = 0; $i < count($request->tempat_timbulan_sampah['foto_tempat']); $i++) {
-                $uploadPath = 'tempat-timbunan-sampah/' . $tempatTimbulanSampah->id . '/foto-tempat';
-                $uploadResult = uploadBase64Image($request->tempat_timbulan_sampah['foto_tempat'][$i], $uploadPath) ;
+                $uploadPath = 'tts/' . $tempatTimbulanSampah->id . '/foto-tempat';
+                $uploadResult = CloudStorage::uploadBase64Image($request->tempat_timbulan_sampah['foto_tempat'][$i], $uploadPath) ;
                 if (!$uploadResult['url']) {
-                    Storage::delete($foto_tempat);
+                    CloudStorage::delete($foto_tempat);
                     DB::rollBack();
                     return $this->sendError($uploadResult['error']);
                 }
@@ -76,14 +76,14 @@ class AuthController extends ApiController
             $tempatTimbulanSampah->updated_by = $user->id ;
             $isCreated = $tempatTimbulanSampah->save();
             if (!$isCreated) {
-                Storage::delete($foto_tempat);
+                CloudStorage::delete($foto_tempat);
                 DB::rollBack();
                 return $this->sendError('Pembuatan tempat timbulan gagal, silahkan coba kembali beberapa saat lagi!');
             }
             $user->tts_id = $tempatTimbulanSampah->id;
             $isUpdated = $user->update();
             if (!$isUpdated) {
-                Storage::delete($foto_tempat);
+                CloudStorage::delete($foto_tempat);
                 DB::rollBack();
                 return $this->sendError('Pembuatan akun gagal, silahkan coba kembali beberapa saat lagi!');
             }
