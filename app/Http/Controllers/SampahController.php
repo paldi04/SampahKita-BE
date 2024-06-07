@@ -456,6 +456,7 @@ class SampahController extends ApiController
         if (!$sampahDimanfaatkan) {
             return $this->sendError('Sampah dimanfaatkan tidak ditemukan!', [], 404);
         }
+        $sampahDimanfaatkan->jumlah_produk_terdistribusi = DistribusiSampahDimanfaatkan::where('sampah_dimanfaatkan_id', '=', $sampahDimanfaatkan->id)->sum('jumlah_produk');
         return $this->sendResponse($sampahDimanfaatkan);
     }
 
@@ -505,6 +506,12 @@ class SampahController extends ApiController
     {
         DB::beginTransaction();
         try {
+            $jumlahProduk = SampahDimanfaatkan::where('id', $request->sampah_dimanfaatkan_id)->value('jumlah_produk');
+            $jumlahProdukTerdistibusi = DistribusiSampahDimanfaatkan::where('sampah_dimanfaatkan_id', $request->sampah_dimanfaatkan_id)->sum('jumlah_produk');
+            $sisaProduk = $jumlahProduk - $jumlahProdukTerdistibusi;
+            if ($request->jumlah_produk > $sisaProduk) {
+                return $this->sendError('Jumlah produk yang akan didistribusikan melebihi sisa produk yang ada!', [], 400);
+            }
             $distribusiSampahDimanfaatkan = new DistribusiSampahDimanfaatkan();
             $distribusiSampahDimanfaatkan->sampah_dimanfaatkan_id = $request->sampah_dimanfaatkan_id;
             $distribusiSampahDimanfaatkan->jumlah_produk = $request->jumlah_produk;

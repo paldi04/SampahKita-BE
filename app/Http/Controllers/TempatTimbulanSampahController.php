@@ -90,8 +90,8 @@ class TempatTimbulanSampahController extends ApiController
             ->offset($offset)->limit($size)->get();
 
         $total = TempatTimbulanSampah::when($request->nama_tempat, function ($query) use ($request) {
-            $query->where('nama_tempat', 'like', '%' . $request->nama_tempat . '%');
-        })
+                $query->where('nama_tempat', 'like', '%' . $request->nama_tempat . '%');
+            })
             ->when($request->tts_kategori_id, function ($query) use ($request) {
                 $query->where('tts_kategori_id', '=', $request->tts_kategori_id);
             })

@@ -34,6 +34,11 @@ class SampahDimanfaatkan extends Model
         return $this->belongsTo(SampahKategori::class, 'sampah_kategori_id', 'id');
     }
 
+    public function distribusiSampahDimanfaatkan()
+    {
+        return $this->hasMany(DistribusiSampahDimanfaatkan::class, 'sampah_dimanfaatkan_id', 'id');
+    }
+
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by', 'id');
