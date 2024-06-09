@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Http\Requests\SampahDiolah;
+
+use App\Models\SampahKategori;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+
+class GetSampahDiolahStatusRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        $this->merge(['tts_id' => $this->user()->tts_id]);
+        return $this->user()->user_role_id === 'oss';
+    }
+    
+    protected function failedAuthorization()
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Unauthorized',
+            'data'    => []
+        ], 400));
+    }
+    
+    public function rules(): array
+    {
+        return [
+            'tts_id' => 'string',
+            'sampah_kategori_id' => [
+                'numeric',
+                'exists:' . SampahKategori::class . ',id', // Ensure the ID exists
+            ]
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'sampah_kategori_id.exists' => 'ID kategori sampah tidak valid!'
+        ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Kesalahan validasi!',
+            'data'    => $validator->errors()
+        ], 400));
+    }
+}

@@ -88,6 +88,11 @@ class TempatTimbulanSampahController extends ApiController
             ->with(['tempatTimbulanSampahKategori:id,nama', 'tempatTimbulanSampahSektor:id,nama'])
             ->orderBy('updated_at', 'desc')
             ->offset($offset)->limit($size)->get();
+        $users->map(function ($item) {
+            $item->kuota_sampah_status = 'kosong';
+            $item->hari_operasional = 'Senin - Jumat';
+            $item->jam_operasional = '09:00 - 17:00';
+        });
 
         $total = TempatTimbulanSampah::when($request->nama_tempat, function ($query) use ($request) {
                 $query->where('nama_tempat', 'like', '%' . $request->nama_tempat . '%');

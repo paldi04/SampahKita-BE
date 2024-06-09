@@ -2,10 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\SampahController;
+use App\Http\Controllers\SampahMasukController;
+use App\Http\Controllers\SampahDiolahController;
+use App\Http\Controllers\SampahDimanfaatkanController;
 use App\Http\Controllers\TempatTimbulanSampahController;
 use App\Http\Controllers\UserController;
-
 
 Route::prefix('auth')->group(function () {
     Route::post('/register/tempat-timbulan-sampah', [AuthController::class, 'registerTempatTimbulanSampah']);
@@ -35,27 +36,27 @@ Route::prefix('tempat-timbulan-sampah')->group(function () {
     Route::put('/{id}', [TempatTimbulanSampahController::class, 'updateTempatTimbulanSampah']);
 });
 Route::prefix('sampah')->group(function () {
-    Route::get('/kategori/list', [SampahController::class, 'getSampahKategoriList']);
+    Route::get('/kategori/list', [SampahMasukController::class, 'getSampahKategoriList']);
     Route::prefix('masuk')->group(function () {
-        Route::post('/', [SampahController::class, 'storeSampahMasuk']);
-        Route::get('/status', [SampahController::class, 'getSampahMasukStatus']);
-        Route::get('/list', [SampahController::class, 'getSampahMasukList']);
-        Route::get('/{id}', [SampahController::class, 'getSampahMasukDetail']);
-        Route::put('/{id}', [SampahController::class, 'updateSampahMasuk']);
+        Route::post('/', [SampahMasukController::class, 'storeSampahMasuk']);
+        Route::get('/status', [SampahMasukController::class, 'getSampahMasukStatus']);
+        Route::get('/list', [SampahMasukController::class, 'getSampahMasukList']);
+        Route::get('/{id}', [SampahMasukController::class, 'getSampahMasukDetail']);
+        Route::put('/{id}', [SampahMasukController::class, 'updateSampahMasuk']);
     });
     Route::prefix('diolah')->group(function () {
-        Route::post('/', [SampahController::class, 'storeSampahDiolah']);
-        Route::get('/status', [SampahController::class, 'getSampahDiolahStatus']);
-        Route::get('/list', [SampahController::class, 'getSampahDiolahList']);
-        Route::get('/{id}', [SampahController::class, 'getSampahDiolahDetail']);
-        Route::put('/{id}', [SampahController::class, 'updateSampahDiolah']);
+        Route::post('/', [SampahDiolahController::class, 'storeSampahDiolah']);
+        Route::get('/status', [SampahDiolahController::class, 'getSampahSampahDiolahControllerDiolahStatus']);
+        Route::get('/list', [SampahDiolahController::class, 'getSampahDiolahList']);
+        Route::get('/{id}', [SampahDiolahController::class, 'getSampahDiolahDetail']);
+        Route::put('/{id}', [SampahDiolahController::class, 'updateSampahDiolah']);
     });
     Route::prefix('dimanfaatkan')->group(function () {
-        Route::post('/', [SampahController::class, 'storeSampahDimanfaatkan']);
-        Route::get('/list', [SampahController::class, 'getSampahDimanfaatkanList']);
-        Route::get('/{id}', [SampahController::class, 'getSampahDimanfaatkanDetail']);
-        Route::put('/{id}', [SampahController::class, 'updateSampahDimanfaatkan']);
-        Route::post('/{id}/distribusi', [SampahController::class, 'storeDistribusiSampahDimanfaatkan']);
-        Route::get('/{id}/distribusi/list', [SampahController::class, 'getDistribusiSampahDimanfaatkanList']);
+        Route::post('/', [SampahDimanfaatkanController::class, 'storeSampahDimanfaatkan']);
+        Route::get('/list', [SampahDimanfaatkanController::class, 'getSampahDimanfaatkanList']);
+        Route::get('/{id}', [SampahDimanfaatkanController::class, 'getSampahDimanfaatkanDetail']);
+        Route::put('/{id}', [SampahDimanfaatkanController::class, 'updateSampahDimanfaatkan']);
+        Route::post('/{id}/distribusi', [SampahDimanfaatkanController::class, 'storeDistribusiSampahDimanfaatkan']);
+        Route::get('/{id}/distribusi/list', [SampahDimanfaatkanController::class, 'getDistribusiSampahDimanfaatkanList']);
     });
 });
