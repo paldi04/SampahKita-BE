@@ -1,6 +1,0 @@
-git add .
-git commit -m "add google cloud storage integration"
-git push origin development
-git push upstream development
-git push github development
-
