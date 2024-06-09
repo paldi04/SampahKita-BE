@@ -32,7 +32,7 @@ class GetSampahDiolahListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tts_id' => 'string',
+            'tss_id' => 'string',
             'tks_id' => 'string',
             'sampah_kategori_id' => [
                 'numeric',
