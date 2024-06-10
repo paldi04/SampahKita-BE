@@ -14,7 +14,7 @@ class GetUserListRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->user_role_id === 'admin';
+        return true;
     }
     protected function failedAuthorization()
     {

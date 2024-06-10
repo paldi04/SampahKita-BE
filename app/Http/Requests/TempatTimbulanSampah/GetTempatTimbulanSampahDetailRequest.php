@@ -13,11 +13,9 @@ class GetTempatTimbulanSampahDetailRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $this->merge(['id' => $this->route('id')]);
-        if ($this->user()->user_role_id === 'admin') {
-            return true;
-        }
-        return $this->user()->tts_id === $this->route('id');
+        $id = $this->route('id') == 'me' ? auth()->user()->id : $this->route('id');
+        $this->merge(['id' => $id]);
+        return true;
     }
     
     protected function failedAuthorization()

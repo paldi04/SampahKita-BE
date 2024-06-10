@@ -14,10 +14,10 @@ class GetSampahDimanfaatkanDetailRequest extends FormRequest
     public function authorize(): bool
     {
         $this->merge(['id' => $this->route('id')]);
-        if (auth()->user()->user_role_id === 'oss') {
+        if (auth()->user()->user_role_id !== 'admin') {
             $this->merge(['tts_id' => auth()->user()->tts_id]);
         }
-        return auth()->user()->user_role_id === 'admin' || auth()->user()->user_role_id === 'oss';
+        return true;
     }
     protected function failedAuthorization()
     {

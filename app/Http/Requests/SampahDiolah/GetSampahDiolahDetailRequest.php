@@ -20,7 +20,7 @@ class GetSampahDiolahDetailRequest extends FormRequest
         if (auth()->user()->user_role_id === 'oks') {
             $this->merge(['tks_id' => auth()->user()->tts_id]);
         }
-        return auth()->user()->user_role_id === 'admin' || auth()->user()->user_role_id === 'oss' || auth()->user()->user_role_id === 'oks';
+        return true;
     }
     protected function failedAuthorization()
     {

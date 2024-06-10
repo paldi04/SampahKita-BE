@@ -13,9 +13,12 @@ class DeleteUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $id = $this->route('id');
+        $id = $this->route('id') == 'me' ? auth()->user()->id : $this->route('id');
+        if (auth()->user()->user_role_id != 'admin' || $id == auth()->user()->id) {
+            return false;
+        }
         $this->merge(['id' => $id]);
-        return auth()->user()->user_role_id == 'admin' && $id !== 'me' && $id !== auth()->user()->id;
+        return true;
     }
     protected function failedAuthorization()
     {

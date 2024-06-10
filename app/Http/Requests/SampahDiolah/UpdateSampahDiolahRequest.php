@@ -14,12 +14,13 @@ class UpdateSampahDiolahRequest extends FormRequest
     public function authorize(): bool
     {
         $this->merge(['id' => $this->route('id')]);
-        if (auth()->user()->user_role_id === 'admin') {
-            return true;
-        }
-        if (auth()->user()->user_role_id === 'oss' && auth()->user()->status === 'terverifikasi') {
-            $this->merge(['tss_id' => auth()->user()->tts_id]);
-            return true;
+        if (auth()->user()->user_role_id !== 'admin') {
+            if (auth()->user()->user_role_id === 'oss') {
+                $this->merge(['tss_id' => auth()->user()->tts_id]);
+            }
+            if (auth()->user()->user_role_id === 'oks') {
+                $this->merge(['tks_id' => auth()->user()->tts_id]);
+            }
         }
         return false;
     }

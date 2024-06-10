@@ -116,7 +116,7 @@ class UserController extends ApiController
             'tempatTimbulanSampah.tempatTimbulanSampahKategori:id,nama',
             'tempatTimbulanSampah.tempatTimbulanSampahSektor:id,nama'
         ];
-        if ($request->id === 'me' || $request->id == auth()->user()->id) {
+        if ($request->id == auth()->user()->id) {
             return $this->sendResponse(auth()->user()->load($withData));
         }
         $user = User::where('id', $request->id)->with($withData)->first();
@@ -130,7 +130,7 @@ class UserController extends ApiController
      */
     public function updateUser(UpdateUserRequest $request)
     {
-        if ($request->id === 'me' || $request->id === auth()->user()->id) {
+        if ($request->id === auth()->user()->id) {
             $user = auth()->user();
         } else {
             $user = User::find($request->id);

@@ -11,13 +11,13 @@ class GetSampahDiolahListRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        if ($this->user()->user_role_id === 'oks') {
-            $this->merge(['tks_id' => $this->user()->tts_id]);
-        }
         if ($this->user()->user_role_id === 'oss') {
             $this->merge(['tss_id' => $this->user()->tts_id]);
         }
-        return $this->user()->user_role_id === 'oss' || $this->user()->user_role_id === 'oks';
+        if ($this->user()->user_role_id === 'oks') {
+            $this->merge(['tks_id' => $this->user()->tts_id]);
+        }
+        return true;
     }
     
     protected function failedAuthorization()

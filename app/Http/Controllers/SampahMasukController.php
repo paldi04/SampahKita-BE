@@ -120,7 +120,6 @@ class SampahMasukController extends ApiController
     {
         $sampahMasuk = SampahMasuk::with('tempatTimbulanSampah:id,nama_tempat', 'sampahKategori:id,nama', 'createdBy:id,nama', 'updatedBy:id,nama')
             ->where('id', '=', $request->id)
-            ->where('tts_id', '=', $request->tts_id)
             ->first();
         if (!$sampahMasuk) {
             return $this->sendError('Sampah masuk tidak ditemukan!', [], 404);

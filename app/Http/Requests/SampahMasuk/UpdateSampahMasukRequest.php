@@ -15,14 +15,10 @@ class UpdateSampahMasukRequest extends FormRequest
     public function authorize(): bool
     {
         $this->merge(['id' => $this->route('id')]);
-        if (auth()->user()->user_role_id === 'admin') {
-            return true;
-        }
-        if (auth()->user()->user_role_id === 'oss' && auth()->user()->status === 'terverifikasi') {
+        if (auth()->user()->user_role_id !== 'admin') {
             $this->merge(['tts_id' => auth()->user()->tts_id]);
-            return true;
         }
-        return false;
+        return true;
     }
     protected function failedAuthorization()
     {

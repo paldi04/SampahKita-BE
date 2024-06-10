@@ -12,7 +12,7 @@ class GetSampahDiolahStatusRequest extends FormRequest
     public function authorize(): bool
     {
         $this->merge(['tts_id' => $this->user()->tts_id]);
-        return $this->user()->user_role_id === 'oss';
+        return true;
     }
     
     protected function failedAuthorization()
