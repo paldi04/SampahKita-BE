@@ -13,7 +13,11 @@ class GetUserDetailRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $this->merge(['id' => $this->route('id')]);
+        $id = $this->route('id') == 'me' ? auth()->user()->id : $this->route('id');
+        if (auth()->user()->user_role_id != 'admin' && $id != auth()->user()->id) {
+            return false;
+        }
+        $this->merge(['id' => $id]);
         return true;
     }
     

@@ -83,7 +83,7 @@ class TempatTimbulanSampahController extends ApiController
                 $query->where('alamat_lengkap', 'like', '%' . $request->alamat_lengkap . '%');
             })
             ->when($request->status, function ($query) use ($request) {
-                $query->where('status', 'like', '%' . $request->status . '%');
+                $query->whereIn('status', explode(',', $request->status));
             })
             ->with(['tempatTimbulanSampahKategori:id,nama', 'tempatTimbulanSampahSektor:id,nama'])
             ->orderBy('updated_at', 'desc')
@@ -107,7 +107,7 @@ class TempatTimbulanSampahController extends ApiController
                 $query->where('alamat_lengkap', 'like', '%' . $request->alamat_lengkap . '%');
             })
             ->when($request->status, function ($query) use ($request) {
-                $query->where('status', 'like', '%' . $request->status . '%');
+                $query->whereIn('status', explode(',', $request->status));
             })
             ->count();
 

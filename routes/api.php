@@ -50,6 +50,11 @@ Route::prefix('sampah')->group(function () {
         Route::get('/list', [SampahDiolahController::class, 'getSampahDiolahList']);
         Route::get('/{id}', [SampahDiolahController::class, 'getSampahDiolahDetail']);
         Route::put('/{id}', [SampahDiolahController::class, 'updateSampahDiolah']);
+        Route::prefix('permintaan')->group(function () {
+            Route::get('/list', [SampahDiolahController::class, 'getPermintaanSampahDiolahList']);
+            Route::get('/{id}', [SampahDiolahController::class, 'getPermintaanSampahDiolahDetail']);
+            Route::put('/{id}', [SampahDiolahController::class, 'updatePermintaanSampahDiolah']);
+        });
     });
     Route::prefix('dimanfaatkan')->group(function () {
         Route::post('/', [SampahDimanfaatkanController::class, 'storeSampahDimanfaatkan']);

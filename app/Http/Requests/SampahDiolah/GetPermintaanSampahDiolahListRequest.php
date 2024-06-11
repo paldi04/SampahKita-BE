@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\SampahDiolah;
 
-use Illuminate\Auth\Access\AuthorizationException;
+use App\Models\SampahKategori;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class GetUserListRequest extends FormRequest
+class GetPermintaanSampahDiolahListRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
+        $this->merge(['tks_id' => $this->user()->tts_id]);
         return true;
     }
+    
     protected function failedAuthorization()
     {
         throw new HttpResponseException(response()->json([
@@ -24,24 +23,33 @@ class GetUserListRequest extends FormRequest
             'data'    => []
         ], 400));
     }
+
     public function rules(): array
     {
         return [
+            'tss_id' => 'nullable|string',
+            'tks_id' => 'required|string',
+            'sampah_kategori_id' => [
+                'numeric',
+                'exists:' . SampahKategori::class . ',id', // Ensure the ID exists
+            ],
+            'status' => 'string',
             'page' => 'numeric|min:1',
             'size' => 'numeric|min:1|max:100',
-            'user_role_id' => 'string|exists:user_roles,id',
-            'status' => 'string',
+            'start_date' => 'date_format:Y-m-d',
+            'end_date' => 'date_format:Y-m-d',
         ];
     }
 
     public function messages(): array
     {
         return [
+            'sampah_kategori_id.exists' => 'ID kategori sampah tidak valid!',
             'page.min' => 'Minimum halaman adalah 1!',
             'size.min' => 'Minimum ukuran adalah 1!',
             'size.max' => 'Maksimum ukuran adalah 100!',
-            'user_role_id.exists' => 'Role user tidak ditemukan!',
-            'status.in' => 'Status tidak valid!'
+            'start_date.date_format' => 'Format tanggal awal tidak valid! (Contoh: 2024-05-01)',
+            'end_date.date_format' => 'Format tanggal akhir tidak valid! (Contoh: 2024-05-31)',
         ];
     }
 

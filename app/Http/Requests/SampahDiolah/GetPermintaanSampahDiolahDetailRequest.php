@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateSampahDiolahRequest extends FormRequest
+class GetPermintaanSampahDiolahDetailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,14 +14,7 @@ class UpdateSampahDiolahRequest extends FormRequest
     public function authorize(): bool
     {
         $this->merge(['id' => $this->route('id')]);
-        if (auth()->user()->user_role_id !== 'admin') {
-            if (auth()->user()->user_role_id === 'oss') {
-                $this->merge(['tss_id' => auth()->user()->tts_id]);
-            }
-            if (auth()->user()->user_role_id === 'oks') {
-                $this->merge(['tks_id' => auth()->user()->tts_id]);
-            }
-        }
+        $this->merge(['tks_id' => auth()->user()->tts_id]);
         return true;
     }
     protected function failedAuthorization()
@@ -36,9 +29,8 @@ class UpdateSampahDiolahRequest extends FormRequest
     {
         return [
             'id' => 'required|string', // Add 'id' field validation
-            'tss_id' => 'nullable|string',
-            'status' => 'string|in:menunggu_respon,diterima,dibatalkan,ditolak', // Add 'status' field validation
-            'keterangan' => 'string',
+            'tts_id' => 'nullable|string',
+            'tks_id' => 'required|string',
         ];
     }
 
@@ -46,7 +38,6 @@ class UpdateSampahDiolahRequest extends FormRequest
     {
         return [
             'id.required' => 'ID tidak boleh kosong!',
-            'status.in' => 'Status tidak valid!',
         ];
     }
 

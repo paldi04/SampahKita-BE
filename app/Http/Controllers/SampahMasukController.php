@@ -187,6 +187,7 @@ class SampahMasukController extends ApiController
                 ->where('tss_id', '=', $sampah->tts_id)
                 ->where('sampah_kategori_id', '=', $sampah->sampah_kategori_id)
                 ->where('status', '!=', 'dibatalkan')
+                ->where('status', '!=', 'ditolak')
                 ->orderBy('updated_at', 'desc')
                 ->get();
 

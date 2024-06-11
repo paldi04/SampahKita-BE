@@ -54,10 +54,10 @@ class UserController extends ApiController
         $users = User::select('id', 'nama', 'status', 'created_at', 'updated_at', 'user_role_id', 'tts_id', 'last_active_at')
             ->where('user_role_id', '!=', 'admin')->with(['userRole:id,nama', 'tempatTimbulanSampah:id,nama_tempat'])
             ->when($request->status, function ($query) use ($request) {
-                $query->where('status', '=', $request->status);
+                $query->whereIn('status', explode(',', $request->status));
             })
             ->when($request->status, function ($query) use ($request) {
-                $query->where('status', '=', $request->status);
+                $query->whereIn('status', explode(',', $request->status));
             })
             ->when($request->user_role_id, function ($query) use ($request) {
                 $query->where('user_role_id', '=', $request->user_role_id);
@@ -67,7 +67,7 @@ class UserController extends ApiController
 
         $total = User::where('user_role_id', '!=', 'admin')
             ->when($request->status, function ($query) use ($request) {
-                $query->where('status', '=', $request->status);
+                $query->whereIn('status', explode(',', $request->status));
             })->count();
 
         $result = [

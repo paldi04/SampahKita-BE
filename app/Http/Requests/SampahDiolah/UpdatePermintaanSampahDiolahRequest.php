@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateSampahDiolahRequest extends FormRequest
+class UpdatePermintaanSampahDiolahRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
