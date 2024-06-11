@@ -15,8 +15,11 @@ class StoreSampahMasukRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        if ($this->user()->role != 'oss' && $this->user()->role != 'oks' && auth()->user()->status != 'terverifikasi') {
+            return false;
+        }
         $this->merge(['tts_id' => auth()->user()->tts_id]);
-        return auth()->user()->status === 'terverifikasi';
+        return true;
     }
     protected function failedAuthorization()
     {

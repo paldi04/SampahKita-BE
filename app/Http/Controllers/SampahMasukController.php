@@ -120,6 +120,9 @@ class SampahMasukController extends ApiController
     {
         $sampahMasuk = SampahMasuk::with('tempatTimbulanSampah:id,nama_tempat', 'sampahKategori:id,nama', 'createdBy:id,nama', 'updatedBy:id,nama')
             ->where('id', '=', $request->id)
+            ->when($request->tts_id, function ($query) use ($request) {
+                $query->where('tts_id', '=', $request->tts_id);
+            })
             ->first();
         if (!$sampahMasuk) {
             return $this->sendError('Sampah masuk tidak ditemukan!', [], 404);
@@ -170,9 +173,7 @@ class SampahMasukController extends ApiController
     public function getSampahMasukStatus (GetSampahMasukStatusRequest $request)
     {
         $sampahMasuk = SampahMasuk::select('tts_id', 'sampah_kategori_id', DB::raw('SUM(berat_kg) as berat_kg'), DB::raw('MAX(updated_at) as last_updated_at'))
-            ->when($request->tts_id, function ($query) use ($request) {
-                $query->where('tts_id', '=', $request->tts_id);
-            })
+            ->where('tts_id', '=', $request->tts_id)
             ->when($request->sampah_kategori_id, function ($query) use ($request) {
                 $query->where('sampah_kategori_id', '=', $request->sampah_kategori_id);
             })

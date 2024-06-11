@@ -14,7 +14,9 @@ class GetPermintaanSampahDiolahDetailRequest extends FormRequest
     public function authorize(): bool
     {
         $this->merge(['id' => $this->route('id')]);
-        $this->merge(['tts_tujuan_id' => auth()->user()->tts_id]);
+        if (auth()->user()->user_role_id !== 'admin') {
+            $this->merge(['tts_tujuan_id' => auth()->user()->tts_id]);
+        }
         return true;
     }
     protected function failedAuthorization()
@@ -29,8 +31,8 @@ class GetPermintaanSampahDiolahDetailRequest extends FormRequest
     {
         return [
             'id' => 'required|string', // Add 'id' field validation
+            'tts_tujuan_id' => 'nullable|string',
             'tts_id' => 'nullable|string',
-            'tts_tujuan_id' => 'required|string',
         ];
     }
 

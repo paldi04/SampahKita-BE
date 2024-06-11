@@ -31,8 +31,8 @@ class UpdateSampahDimanfaatkanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'string', // Add 'id' field validation
-            'tts_id' => 'nullable|string',
+            'id' => 'required|string', // Add 'id' field validation
+            'tts_id' => 'required|string',
             'sampah_kategori_id' => [
                 'numeric',
                 'exists:' . SampahKategori::class . ',id', // Ensure the ID exists

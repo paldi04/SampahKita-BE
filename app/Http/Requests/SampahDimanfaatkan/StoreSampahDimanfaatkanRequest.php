@@ -15,6 +15,9 @@ class StoreSampahDimanfaatkanRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        if ($this->user()->role != 'oss' && $this->user()->role != 'oks') {
+            return false;
+        }
         $this->merge(['tts_id' => auth()->user()->tts_id]);
         return true;
     }
@@ -29,11 +32,7 @@ class StoreSampahDimanfaatkanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tts_id' => [
-                'required',
-                'string',
-                'exists:' . TempatTimbulanSampah::class . ',id', // Ensure the ID exists
-            ],
+            'tts_id' => 'required|string',
             'sampah_kategori_id' => [
                 'required',
                 'numeric',
@@ -54,7 +53,6 @@ class StoreSampahDimanfaatkanRequest extends FormRequest
         return [
             'tts_id.required' => 'ID Tempat Sumber Sampah wajib diisi!',
             'tts_id.string' => 'ID Tempat Sumber Sampah harus berupa string!',
-            'tts_id.exists' => 'ID Tempat Sumber Sampah tidak ditemukan!',
             'sampah_kategori_id.required' => 'ID Kategori Sampah wajib diisi!',
             'sampah_kategori_id.numeric' => 'ID Kategori Sampah harus berupa angka!',
             'sampah_kategori_id.exists' => 'ID Kategori Sampah tidak ditemukan!',

@@ -32,6 +32,7 @@ class UpdateSampahMasukRequest extends FormRequest
     {
         return [
             'id' => 'required|string', // Add 'id' field validation
+            'tts_id' => 'required|string',
             'sampah_kategori_id' => [
                 'required',
                 'numeric',

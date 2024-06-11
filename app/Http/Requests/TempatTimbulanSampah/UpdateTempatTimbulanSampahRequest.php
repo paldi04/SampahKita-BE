@@ -17,7 +17,7 @@ class UpdateTempatTimbulanSampahRequest extends FormRequest
         if ($this->user()->user_role_id !== 'admin' && $id != $this->user()->tts_id) {
             return false;
         }
-        $this->merge(['id' => $this->route('id')]);
+        $this->merge(['id' => $id]);
         return true;
     }
     protected function failedAuthorization()

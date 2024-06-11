@@ -27,7 +27,7 @@ class GetDistribusiSampahDimanfaatkanListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'sampah_dimanfaatkan_id' => 'string',
+            'sampah_dimanfaatkan_id' => 'required|string',
             'sampah_kategori_id' => [
                 'numeric',
                 'exists:' . SampahKategori::class . ',id', // Ensure the ID exists

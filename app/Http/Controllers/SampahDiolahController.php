@@ -156,9 +156,7 @@ class SampahDiolahController extends ApiController
     public function getSampahDiolahStatus (GetSampahDiolahStatusRequest $request)
     {
         $sampahDiolah = SampahDiolah::select('tts_id', 'sampah_kategori_id', DB::raw('SUM(berat_kg) as berat_kg'), DB::raw('MAX(updated_at) as last_updated_at'))
-            ->when($request->tts_id, function ($query) use ($request) {
-                $query->where('tts_id', '=', $request->tts_id);
-            })
+            ->where('tts_id', '=', $request->tts_id)
             ->when($request->sampah_kategori_id, function ($query) use ($request) {
                 $query->where('sampah_kategori_id', '=', $request->sampah_kategori_id);
             })

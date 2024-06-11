@@ -11,7 +11,9 @@ class GetSampahMasukStatusRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $this->merge(['tts_id' => $this->user()->tts_id]);
+        if ($this->user()->role != 'admin') {
+            $this->merge(['tts_id' => $this->user()->tts_id]);
+        }
         return true;
     }
     
@@ -27,7 +29,7 @@ class GetSampahMasukStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tts_id' => 'string',
+            'tts_id' => 'required|string',
             'sampah_kategori_id' => [
                 'numeric',
                 'exists:' . SampahKategori::class . ',id', // Ensure the ID exists

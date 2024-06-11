@@ -11,7 +11,7 @@ class GetSampahDiolahListRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        if ($this->user()->user_role_id === 'oss' || $this->user()->user_role_id === 'oks') {
+        if ($this->user()->role != 'admin') {
             $this->merge(['tts_id' => $this->user()->tts_id]);
         }
         return true;
@@ -29,7 +29,7 @@ class GetSampahDiolahListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tts_id' => 'string',
+            'tts_id' => 'required|string',
             'tts_tujuan_id' => 'string',
             'sampah_kategori_id' => [
                 'numeric',

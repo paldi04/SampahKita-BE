@@ -15,6 +15,9 @@ class StoreDistribusiSampahDimanfaatkanRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        if ($this->user()->role != 'oss' && $this->user()->role != 'oks') {
+            return false;
+        }
         $this->merge(['sampah_dimanfaatkan_id' => $this->route('id')]);
         return true;
     }

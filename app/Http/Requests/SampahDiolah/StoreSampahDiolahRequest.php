@@ -15,6 +15,9 @@ class StoreSampahDiolahRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        if ($this->user()->role != 'oss' && $this->user()->role != 'oks') {
+            return false;
+        }
         $this->merge(['tts_id' => auth()->user()->tts_id]);
         return true;
     }

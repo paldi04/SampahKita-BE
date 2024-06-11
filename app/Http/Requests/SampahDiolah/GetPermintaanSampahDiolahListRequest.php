@@ -11,7 +11,9 @@ class GetPermintaanSampahDiolahListRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $this->merge(['tts_tujuan_id' => $this->user()->tts_id]);
+        if (auth()->user()->user_role_id !== 'admin') {
+            $this->merge(['tts_tujuan_id' => $this->user()->tts_id]);
+        }
         return true;
     }
     
@@ -27,8 +29,8 @@ class GetPermintaanSampahDiolahListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tts_id' => 'nullable|string',
             'tts_tujuan_id' => 'required|string',
+            'tts_id' => 'nullable|string',
             'sampah_kategori_id' => [
                 'numeric',
                 'exists:' . SampahKategori::class . ',id', // Ensure the ID exists

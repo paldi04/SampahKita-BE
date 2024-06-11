@@ -14,11 +14,8 @@ class GetSampahDiolahDetailRequest extends FormRequest
     public function authorize(): bool
     {
         $this->merge(['id' => $this->route('id')]);
-        if (auth()->user()->user_role_id === 'oss') {
+        if (auth()->user()->user_role_id != 'admin') {
             $this->merge(['tts_id' => auth()->user()->tts_id]);
-        }
-        if (auth()->user()->user_role_id === 'oks') {
-            $this->merge(['tts_tujuan_id' => auth()->user()->tts_id]);
         }
         return true;
     }
