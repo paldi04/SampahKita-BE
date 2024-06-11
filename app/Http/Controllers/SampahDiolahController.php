@@ -29,12 +29,12 @@ class SampahDiolahController extends ApiController
         DB::beginTransaction();
         try {
             $sampahDiolah = new SampahDiolah();
-            $sampahDiolah->tss_id = $request->tss_id;
+            $sampahDiolah->tts_id = $request->tts_id;
             $sampahDiolah->sampah_kategori_id = $request->sampah_kategori_id;
             $sampahDiolah->berat_kg = $request->berat_kg;
             $sampahDiolah->diolah_oleh = $request->diolah_oleh;
             if ($request->diolah_oleh === 'tks') {
-                $sampahDiolah->tks_id = $request->tks_id;
+                $sampahDiolah->tts_tujuan_id = $request->tts_tujuan_id;
                 $sampahDiolah->status = 'menunggu_respon';
             } else {
                 $sampahDiolah->status = 'diterima';
@@ -59,17 +59,17 @@ class SampahDiolahController extends ApiController
         $size = $request->input('size', 10);
         $offset = ($page - 1) * $size;
 
-        $list = SampahDiolah::select('id', 'tss_id', 'sampah_kategori_id', 'berat_kg', 'diolah_oleh', 'tks_id', 'waktu_diolah', 'status', 'created_by')
-            ->with('tempatSumberSampah:id,nama_tempat', 'sampahKategori:id,nama', 'tempatKumpulanSampah:id,nama_tempat', 'createdBy:id,nama')
-            ->where('tss_id', '=', $request->tss_id)
+        $list = SampahDiolah::select('id', 'tts_id', 'sampah_kategori_id', 'berat_kg', 'diolah_oleh', 'tts_tujuan_id', 'waktu_diolah', 'status', 'created_by')
+            ->with('tempatTimbulanSampah:id,nama_tempat', 'sampahKategori:id,nama', 'tempatTimbulanSampahTujuan:id,nama_tempat', 'createdBy:id,nama')
+            ->where('tts_id', '=', $request->tts_id)
             ->when($request->sampah_kategori_id, function ($query) use ($request) {
                 $query->where('sampah_kategori_id', '=', $request->sampah_kategori_id);
             })
             ->when($request->diolah_oleh, function ($query) use ($request) {
                 $query->where('diolah_oleh', '=', $request->diolah_oleh);
             })
-            ->when($request->tks_id, function ($query) use ($request) {
-                $query->where('tks_id', '=', $request->tks_id);
+            ->when($request->tts_tujuan_id, function ($query) use ($request) {
+                $query->where('tts_tujuan_id', '=', $request->tts_tujuan_id);
             })
             ->when($request->status, function ($query) use ($request) {
                 $query->whereIn('status', explode(',', $request->status));
@@ -77,15 +77,15 @@ class SampahDiolahController extends ApiController
             ->orderBy('updated_at', 'desc')
             ->offset($offset)->limit($size)->get();
 
-        $total = SampahDiolah::where('tss_id', '=', $request->tss_id)
+        $total = SampahDiolah::where('tts_id', '=', $request->tts_id)
             ->when($request->sampah_kategori_id, function ($query) use ($request) {
                 $query->where('sampah_kategori_id', '=', $request->sampah_kategori_id);
             })
             ->when($request->diolah_oleh, function ($query) use ($request) {
                 $query->where('diolah_oleh', '=', $request->diolah_oleh);
             })
-            ->when($request->tks_id, function ($query) use ($request) {
-                $query->where('tks_id', '=', $request->tks_id);
+            ->when($request->tts_tujuan_id, function ($query) use ($request) {
+                $query->where('tts_tujuan_id', '=', $request->tts_tujuan_id);
             })
             ->when($request->status, function ($query) use ($request) {
                 $query->whereIn('status', explode(',', $request->status));
@@ -104,13 +104,13 @@ class SampahDiolahController extends ApiController
 
     public function getSampahDiolahDetail (GetSampahDiolahDetailRequest $request)
     {
-        $sampahDiolah = SampahDiolah::with('tempatSumberSampah:id,nama_tempat,alamat_lengkap,alamat_latitude,alamat_longitude', 'sampahKategori:id,nama', 'tempatKumpulanSampah:id,nama_tempat,alamat_lengkap,alamat_latitude,alamat_longitude', 'createdBy:id,nama', 'updatedBy:id,nama')
+        $sampahDiolah = SampahDiolah::with('tempatTimbulanSampah:id,nama_tempat,alamat_lengkap,alamat_latitude,alamat_longitude', 'sampahKategori:id,nama', 'tempatTimbulanSampahTujuan:id,nama_tempat,alamat_lengkap,alamat_latitude,alamat_longitude', 'createdBy:id,nama', 'updatedBy:id,nama')
             ->where('id', '=', $request->id)
-            ->when($request->tss_id, function ($query) use ($request) {
-                $query->where('tss_id', '=', $request->tss_id);
+            ->when($request->tts_id, function ($query) use ($request) {
+                $query->where('tts_id', '=', $request->tts_id);
             })
-            ->when($request->tks_id, function ($query) use ($request) {
-                $query->where('tks_id', '=', $request->tks_id);
+            ->when($request->tts_tujuan_id, function ($query) use ($request) {
+                $query->where('tts_tujuan_id', '=', $request->tts_tujuan_id);
             })
             ->first();
         if (!$sampahDiolah) {
@@ -118,8 +118,8 @@ class SampahDiolahController extends ApiController
         }
 
         try {
-            $firstLocation = new LatLong($sampahDiolah->tempatSumberSampah->alamat_latitude, $sampahDiolah->tempatSumberSampah->alamat_longitude);
-            $secondLocation = new LatLong($sampahDiolah->tempatKumpulanSampah->alamat_latitude, $sampahDiolah->tempatKumpulanSampah->alamat_longitude);
+            $firstLocation = new LatLong($sampahDiolah->tempatTimbulanSampah->alamat_latitude, $sampahDiolah->tempatTimbulanSampah->alamat_longitude);
+            $secondLocation = new LatLong($sampahDiolah->tempatTimbulanSampahTujuan->alamat_latitude, $sampahDiolah->tempatTimbulanSampahTujuan->alamat_longitude);
             $distanceCalculator = new DistanceCalculator($firstLocation, $secondLocation);
             $distance = $distanceCalculator->get();
             $sampahDiolah->jarak_tempuh = round($distance->asKilometres(), 1).'km';
@@ -134,7 +134,7 @@ class SampahDiolahController extends ApiController
     {
         DB::beginTransaction();
         try {
-            $sampahDiolah = SampahDiolah::where('id', $request->id)->where('tss_id', $request->tss_id)->first();
+            $sampahDiolah = SampahDiolah::where('id', $request->id)->where('tts_id', $request->tts_id)->first();
             if (!$sampahDiolah) {
                 return $this->sendError('Sampah diolah tidak ditemukan!', [], 404);
             }
@@ -155,15 +155,15 @@ class SampahDiolahController extends ApiController
 
     public function getSampahDiolahStatus (GetSampahDiolahStatusRequest $request)
     {
-        $sampahDiolah = SampahDiolah::select('tss_id', 'sampah_kategori_id', DB::raw('SUM(berat_kg) as berat_kg'), DB::raw('MAX(updated_at) as last_updated_at'))
-            ->when($request->tss_id, function ($query) use ($request) {
-                $query->where('tss_id', '=', $request->tss_id);
+        $sampahDiolah = SampahDiolah::select('tts_id', 'sampah_kategori_id', DB::raw('SUM(berat_kg) as berat_kg'), DB::raw('MAX(updated_at) as last_updated_at'))
+            ->when($request->tts_id, function ($query) use ($request) {
+                $query->where('tts_id', '=', $request->tts_id);
             })
             ->when($request->sampah_kategori_id, function ($query) use ($request) {
                 $query->where('sampah_kategori_id', '=', $request->sampah_kategori_id);
             })
-            ->groupBy('tss_id', 'sampah_kategori_id')
-            ->with('tempatSumberSampah:id,nama_tempat', 'sampahKategori:id,nama')
+            ->groupBy('tts_id', 'sampah_kategori_id')
+            ->with('tempatTimbulanSampah:id,nama_tempat', 'sampahKategori:id,nama')
             ->get();
 
         $sampahDiolah = $sampahDiolah->map(function ($sampah) {
@@ -184,14 +184,14 @@ class SampahDiolahController extends ApiController
         $size = $request->input('size', 10);
         $offset = ($page - 1) * $size;
 
-        $list = SampahDiolah::select('id', 'tss_id', 'sampah_kategori_id', 'berat_kg', 'diolah_oleh', 'tks_id', 'waktu_diolah', 'status', 'created_by')
-            ->with('tempatSumberSampah:id,nama_tempat', 'sampahKategori:id,nama', 'tempatKumpulanSampah:id,nama_tempat', 'createdBy:id,nama')
-            ->where('tks_id', '=', $request->tks_id)
+        $list = SampahDiolah::select('id', 'tts_id', 'sampah_kategori_id', 'berat_kg', 'diolah_oleh', 'tts_tujuan_id', 'waktu_diolah', 'status', 'created_by')
+            ->with('tempatTimbulanSampah:id,nama_tempat', 'sampahKategori:id,nama', 'tempatTimbulanSampahTujuan:id,nama_tempat', 'createdBy:id,nama')
+            ->where('tts_tujuan_id', '=', $request->tts_tujuan_id)
             ->when($request->sampah_kategori_id, function ($query) use ($request) {
                 $query->where('sampah_kategori_id', '=', $request->sampah_kategori_id);
             })
-            ->when($request->tss_id, function ($query) use ($request) {
-                $query->where('tss_id', '=', $request->tss_id);
+            ->when($request->tts_id, function ($query) use ($request) {
+                $query->where('tts_id', '=', $request->tts_id);
             })
             ->when($request->status, function ($query) use ($request) {
                 $query->whereIn('status', explode(',', $request->status));
@@ -199,12 +199,12 @@ class SampahDiolahController extends ApiController
             ->orderBy('updated_at', 'desc')
             ->offset($offset)->limit($size)->get();
 
-        $total = SampahDiolah::where('tks_id', '=', $request->tks_id)
+        $total = SampahDiolah::where('tts_tujuan_id', '=', $request->tts_tujuan_id)
             ->when($request->sampah_kategori_id, function ($query) use ($request) {
                 $query->where('sampah_kategori_id', '=', $request->sampah_kategori_id);
             })
-            ->when($request->tss_id, function ($query) use ($request) {
-                $query->where('tss_id', '=', $request->tss_id);
+            ->when($request->tts_id, function ($query) use ($request) {
+                $query->where('tts_id', '=', $request->tts_id);
             })
             ->when($request->status, function ($query) use ($request) {
                 $query->whereIn('status', explode(',', $request->status));
@@ -223,13 +223,13 @@ class SampahDiolahController extends ApiController
 
     public function getPermintaanSampahDiolahDetail (GetPermintaanSampahDiolahDetailRequest $request)
     {
-        $sampahDiolah = SampahDiolah::with('tempatSumberSampah:id,nama_tempat,alamat_lengkap,alamat_latitude,alamat_longitude', 'sampahKategori:id,nama', 'tempatKumpulanSampah:id,nama_tempat,alamat_lengkap,alamat_latitude,alamat_longitude', 'createdBy:id,nama', 'updatedBy:id,nama')
+        $sampahDiolah = SampahDiolah::with('tempatTimbulanSampah:id,nama_tempat,alamat_lengkap,alamat_latitude,alamat_longitude', 'sampahKategori:id,nama', 'tempatTimbulanSampahTujuan:id,nama_tempat,alamat_lengkap,alamat_latitude,alamat_longitude', 'createdBy:id,nama', 'updatedBy:id,nama')
             ->where('id', '=', $request->id)
-            ->when($request->tss_id, function ($query) use ($request) {
-                $query->where('tss_id', '=', $request->tss_id);
+            ->when($request->tts_id, function ($query) use ($request) {
+                $query->where('tts_id', '=', $request->tts_id);
             })
-            ->when($request->tks_id, function ($query) use ($request) {
-                $query->where('tks_id', '=', $request->tks_id);
+            ->when($request->tts_tujuan_id, function ($query) use ($request) {
+                $query->where('tts_tujuan_id', '=', $request->tts_tujuan_id);
             })
             ->first();
         if (!$sampahDiolah) {
@@ -237,8 +237,8 @@ class SampahDiolahController extends ApiController
         }
 
         try {
-            $firstLocation = new LatLong($sampahDiolah->tempatSumberSampah->alamat_latitude, $sampahDiolah->tempatSumberSampah->alamat_longitude);
-            $secondLocation = new LatLong($sampahDiolah->tempatKumpulanSampah->alamat_latitude, $sampahDiolah->tempatKumpulanSampah->alamat_longitude);
+            $firstLocation = new LatLong($sampahDiolah->tempatTimbulanSampah->alamat_latitude, $sampahDiolah->tempatTimbulanSampah->alamat_longitude);
+            $secondLocation = new LatLong($sampahDiolah->tempatTimbulanSampahTujuan->alamat_latitude, $sampahDiolah->tempatTimbulanSampahTujuan->alamat_longitude);
             $distanceCalculator = new DistanceCalculator($firstLocation, $secondLocation);
             $distance = $distanceCalculator->get();
             $sampahDiolah->jarak_tempuh = round($distance->asKilometres(), 1).'km';
@@ -253,7 +253,7 @@ class SampahDiolahController extends ApiController
     {
         DB::beginTransaction();
         try {
-            $sampahDiolah = SampahDiolah::where('id', $request->id)->where('tks_id', $request->tks_id)->first();
+            $sampahDiolah = SampahDiolah::where('id', $request->id)->where('tts_tujuan_id', $request->tts_tujuan_id)->first();
             if (!$sampahDiolah) {
                 return $this->sendError('Sampah diolah tidak ditemukan!', [], 404);
             }
@@ -266,7 +266,7 @@ class SampahDiolahController extends ApiController
             }
             if ($request->status === 'diterima') {
                 $sampahMasuk = new SampahMasuk();
-                $sampahMasuk->tts_id = $request->tks_id;
+                $sampahMasuk->tts_id = $request->tts_tujuan_id;
                 $sampahMasuk->sampah_kategori_id = $sampahDiolah->sampah_kategori_id;
                 $sampahMasuk->foto_sampah = null;
     

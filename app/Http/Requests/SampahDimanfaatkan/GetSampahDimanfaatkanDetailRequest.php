@@ -32,7 +32,7 @@ class GetSampahDimanfaatkanDetailRequest extends FormRequest
         return [
             'id' => 'required|string', // Add 'id' field validation
             'tts_id' => 'nullable|string',
-            'tks_id' => 'nullable|string',
+            'tts_tujuan_id' => 'nullable|string',
         ];
     }
 

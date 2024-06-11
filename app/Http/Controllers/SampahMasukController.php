@@ -183,8 +183,8 @@ class SampahMasukController extends ApiController
         $sampahMasuk = $sampahMasuk->map(function ($sampah) {
             $sampah->last_updated_at = Carbon::parse($sampah->last_updated_at)->format('Y-m-d H:i:s');
             
-            $sampahDiolah = SampahDiolah::select('id', 'tss_id', 'sampah_kategori_id', 'status', 'berat_kg')
-                ->where('tss_id', '=', $sampah->tts_id)
+            $sampahDiolah = SampahDiolah::select('id', 'tts_id', 'sampah_kategori_id', 'status', 'berat_kg')
+                ->where('tts_id', '=', $sampah->tts_id)
                 ->where('sampah_kategori_id', '=', $sampah->sampah_kategori_id)
                 ->where('status', '!=', 'dibatalkan')
                 ->where('status', '!=', 'ditolak')

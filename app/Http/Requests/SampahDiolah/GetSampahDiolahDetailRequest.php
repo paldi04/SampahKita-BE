@@ -15,10 +15,10 @@ class GetSampahDiolahDetailRequest extends FormRequest
     {
         $this->merge(['id' => $this->route('id')]);
         if (auth()->user()->user_role_id === 'oss') {
-            $this->merge(['tss_id' => auth()->user()->tts_id]);
+            $this->merge(['tts_id' => auth()->user()->tts_id]);
         }
         if (auth()->user()->user_role_id === 'oks') {
-            $this->merge(['tks_id' => auth()->user()->tts_id]);
+            $this->merge(['tts_tujuan_id' => auth()->user()->tts_id]);
         }
         return true;
     }
@@ -35,7 +35,7 @@ class GetSampahDiolahDetailRequest extends FormRequest
         return [
             'id' => 'required|string', // Add 'id' field validation
             'tts_id' => 'nullable|string',
-            'tks_id' => 'nullable|string',
+            'tts_tujuan_id' => 'nullable|string',
         ];
     }
 

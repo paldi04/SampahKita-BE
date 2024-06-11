@@ -15,7 +15,7 @@ class StoreSampahDiolahRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $this->merge(['tss_id' => auth()->user()->tts_id]);
+        $this->merge(['tts_id' => auth()->user()->tts_id]);
         return true;
     }
     protected function failedAuthorization()
@@ -29,7 +29,7 @@ class StoreSampahDiolahRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tss_id' => [
+            'tts_id' => [
                 'required',
                 'string',
                 'exists:' . TempatTimbulanSampah::class . ',id', // Ensure the ID exists
@@ -41,7 +41,7 @@ class StoreSampahDiolahRequest extends FormRequest
             ],
             'berat_kg' => 'required|numeric',
             'diolah_oleh' => 'required|string',
-            'tks_id' => $this->input('diolah_oleh') === 'tks' ? 'required|exists:' . TempatTimbulanSampah::class . ',id' : 'nullable',
+            'tts_tujuan_id' => $this->input('diolah_oleh') === 'tks' ? 'required|exists:' . TempatTimbulanSampah::class . ',id' : 'nullable',
             'waktu_diolah' => 'required|date_format:Y-m-d H:i:s'
 
         ];
@@ -60,7 +60,7 @@ class StoreSampahDiolahRequest extends FormRequest
             'berat_kg.numeric' => 'Berat Sampah harus berupa angka!',
             'diolah_oleh.required' => 'Diolah Oleh wajib diisi!',
             'diolah_oleh.string' => 'Diolah Oleh harus berupa string!',
-            'tks_id.exists' => 'ID Tempat Kumpulan Sampah tidak ditemukan!',
+            'tts_tujuan_id.exists' => 'ID Tempat Kumpulan Sampah tidak ditemukan!',
             'waktu_diolah.required' => 'Waktu Pengolahan Sampah wajib diisi!',
         ];
     }

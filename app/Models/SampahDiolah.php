@@ -11,20 +11,20 @@ class SampahDiolah extends Model
 
     protected $fillable = [
         'id',
-        'tss_id',
+        'tts_id',
         'sampah_kategori_id',
         'berat_kg',
         'diolah_oleh',
-        'tks_id',
+        'tts_tujuan_id',
         'waktu_diolah',
         'status',
         'created_by',
         'updated_by',
     ];
 
-    public function tempatSumberSampah()
+    public function tempatTimbulanSampah()
     {
-        return $this->belongsTo(TempatTimbulanSampah::class, 'tss_id', 'id');
+        return $this->belongsTo(TempatTimbulanSampah::class, 'tts_id', 'id');
     }
 
     public function sampahKategori()
@@ -32,9 +32,9 @@ class SampahDiolah extends Model
         return $this->belongsTo(SampahKategori::class, 'sampah_kategori_id', 'id');
     }
 
-    public function tempatKumpulanSampah()
+    public function tempatTimbulanSampahTujuan()
     {
-        return $this->belongsTo(TempatTimbulanSampah::class, 'tks_id', 'id');
+        return $this->belongsTo(TempatTimbulanSampah::class, 'tts_tujuan_id', 'id');
     }
 
     public function createdBy()

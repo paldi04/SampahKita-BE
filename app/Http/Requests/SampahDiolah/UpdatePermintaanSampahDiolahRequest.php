@@ -16,10 +16,10 @@ class UpdatePermintaanSampahDiolahRequest extends FormRequest
         $this->merge(['id' => $this->route('id')]);
         if (auth()->user()->user_role_id !== 'admin') {
             if (auth()->user()->user_role_id === 'oss') {
-                $this->merge(['tss_id' => auth()->user()->tts_id]);
+                $this->merge(['tts_id' => auth()->user()->tts_id]);
             }
             if (auth()->user()->user_role_id === 'oks') {
-                $this->merge(['tks_id' => auth()->user()->tts_id]);
+                $this->merge(['tts_tujuan_id' => auth()->user()->tts_id]);
             }
         }
         return true;
@@ -36,7 +36,7 @@ class UpdatePermintaanSampahDiolahRequest extends FormRequest
     {
         return [
             'id' => 'required|string', // Add 'id' field validation
-            'tss_id' => 'nullable|string',
+            'tts_id' => 'nullable|string',
             'status' => 'string|in:menunggu_respon,diterima,dibatalkan,ditolak', // Add 'status' field validation
             'keterangan' => 'string',
         ];

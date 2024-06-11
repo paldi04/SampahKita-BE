@@ -35,14 +35,14 @@ return new class extends Migration
 
         Schema::create('sampah_diolahs', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('tss_id')->nullable()->comment('ID Tempat Sumber Sampah');
-            $table->foreign('tss_id')->references('id')->on('tempat_timbulan_sampahs')->onDelete('restrict')->onUpdate('cascade');
+            $table->uuid('tts_id')->nullable()->comment('ID Tempat Timbulan Sampah yang menjadi sumber sampah');
+            $table->foreign('tts_id')->references('id')->on('tempat_timbulan_sampahs')->onDelete('restrict')->onUpdate('cascade');
             $table->unsignedBigInteger('sampah_kategori_id')->comment('ID Kategori Sampah');
             $table->foreign('sampah_kategori_id')->references('id')->on('sampah_kategoris')->onDelete('restrict')->onUpdate('cascade');
             $table->decimal('berat_kg', 10, 2);
             $table->string('diolah_oleh');
-            $table->uuid('tks_id')->nullable()->comment('ID Tempat Kumpulan Sampah jika diolah oleh TKS');
-            $table->foreign('tks_id')->references('id')->on('tempat_timbulan_sampahs')->onDelete('restrict')->onUpdate('cascade');
+            $table->uuid('tts_tujuan_id')->nullable()->comment('ID Tempat Timbulan Sampah yang menjadi tujuan sampah diolah');
+            $table->foreign('tts_tujuan_id')->references('id')->on('tempat_timbulan_sampahs')->onDelete('restrict')->onUpdate('cascade');
             $table->dateTime('waktu_diolah');
             $table->enum('status', ['menunggu_respon', 'diterima', 'dibatalkan', 'ditolak'])->default('menunggu_respon');
             $table->text('keterangan')->nullable();

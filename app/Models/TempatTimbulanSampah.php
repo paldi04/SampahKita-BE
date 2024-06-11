@@ -67,12 +67,12 @@ class TempatTimbulanSampah extends Model
 
     public function sampahDiolahs()
     {
-        return $this->hasMany(SampahDiolah::class, 'tss_id');
+        return $this->hasMany(SampahDiolah::class, 'tts_id');
     }
 
     public function sampahDiolahOlehs()
     {
-        return $this->hasMany(SampahDiolah::class, 'tks_id');
+        return $this->hasMany(SampahDiolah::class, 'tts_tujuan_id');
     }
 
     public function sampahDimanfaatkan()

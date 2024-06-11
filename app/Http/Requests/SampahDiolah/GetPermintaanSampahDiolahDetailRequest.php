@@ -14,7 +14,7 @@ class GetPermintaanSampahDiolahDetailRequest extends FormRequest
     public function authorize(): bool
     {
         $this->merge(['id' => $this->route('id')]);
-        $this->merge(['tks_id' => auth()->user()->tts_id]);
+        $this->merge(['tts_tujuan_id' => auth()->user()->tts_id]);
         return true;
     }
     protected function failedAuthorization()
@@ -30,7 +30,7 @@ class GetPermintaanSampahDiolahDetailRequest extends FormRequest
         return [
             'id' => 'required|string', // Add 'id' field validation
             'tts_id' => 'nullable|string',
-            'tks_id' => 'required|string',
+            'tts_tujuan_id' => 'required|string',
         ];
     }
 
